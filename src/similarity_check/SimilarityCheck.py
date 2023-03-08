@@ -16,6 +16,16 @@ class SimilarityCheck:
     def check_similarity(self):
         evaluator = TableEvaluator(real=self.real_data, fake=self.synthetic_data, cat_cols=self.cat_cols)
         evaluator.visual_evaluation()
+    
+    def compare_model_performance(self, fitted_model_real, fitted_model_synth, X_test, y_test):
+        """
+        Method that computes how close the scores of a model trained on the real vs. synthetic
+        data are.
+        """
+        score_real = fitted_model_real.score(X_test, y_test)
+        score_synth = fitted_model_synth.score(X_test, y_test)
+        print(f"Score on real dataset: {score_real}\nScore on synthetic dataset: {score_synth}")
+        return score_real, score_synth
 
 
 
