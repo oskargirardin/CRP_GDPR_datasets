@@ -27,3 +27,17 @@ Methods:
 - Calculating the metrics
 - Making visualizations
 - Privacy checks
+
+### Privacy check (Based on SDMetrics Diagnostic Report: https://docs.sdv.dev/sdmetrics/reports/diagnostic-report/single-table-api)
+Attributes:
+- Synthesis, Coverage, Boundaries scores
+- Real data
+- Sythetic Data
+- Datatypes of columns
+
+Methods:
+- Create Report (-> compute Synthesis, Coverage, Boundaries scores)
+- Get details on report (return summary of report)
+- Get individual scores
+- Visualizations
+- Save report as a file
