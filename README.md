@@ -9,6 +9,7 @@ Attributes:
 - Training data
 - List of categorical columns 
 - List of columns of privacy concerns
+
 Methods:
 - Main method that implements the logic and calls other methods that implement the specific architectures
 - Method for each individual architecture
