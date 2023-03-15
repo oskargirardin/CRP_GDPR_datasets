@@ -73,7 +73,7 @@ class Generator:
         output = []
         for i in range(num_points):
             while True:
-                new_id=fake.random_int(min=1, max=1000)
+                new_id=fake.random_int(min=1, max=num_points)
                 if new_id not in used_ids:
                     used_ids.add(new_id)
                     break
