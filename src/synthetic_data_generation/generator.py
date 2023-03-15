@@ -2,15 +2,16 @@ import pandas as pd
 import numpy as np
 from faker import Faker
 import random
-
+from collections import OrderedDict
 from sdv.tabular import CTGAN, GaussianCopula
 from sdv.evaluation import evaluate
 from table_evaluator import TableEvaluator
-
+from src.utils import *
+import re
 
 class Generator:
 
-    def __init__(self, n_epochs, n_samples,architecture, data, categorical_columns, sensitive_columns):
+    def __init__(self, data, architecture, n_samples,n_epochs = None, categorical_columns = None, sensitive_columns = None):
 
         """
         :param n_epochs: the number of epochs used for training
@@ -18,7 +19,8 @@ class Generator:
         :param architecture: the chosen architecture, one of ['CTGAN', 'GaussianCopula']
         :param data: the data that should be trained on, should be in a pandas dataframe
         :param categorical_columns: a list with categorical columns
-        :param sensitive_columns: a dict with sensitive columns and what faker category they belong to
+        :param sensitive_columns: a dict with sensitive columns and what  category they belong to
+        The categories can be found in the faker_categorical function
         """
 
         self.n_epochs = n_epochs
@@ -54,95 +56,87 @@ class Generator:
 
         return synth_data
 
-
-    def faker_categorical(self, sensitive_col, seed=None, num_points=100):
+    def faker_categorical(self, seed=None):
         """
-        Instantiates Faker, generates fake data for it 
-
-        :param sensitive_col: list of str, the column names
+        Instantiates Faker, generates fake data for it
+        WARNING: data generated here should not be used for ML models
         :param seed: int, random seed, defaults
-        :param num_points: int, the number of data points to generate. Defaults to 100. 
         """
 
-        # To do find a way to guess the faker data type of new 
-        seed=seed or random.seed()
-        fake = Faker()
-        fake.seed_instance(seed)
+        # TODO: Find a way to make this generalizable, f.e. create many attributes, and return the ones asked
 
-        used_ids=set() #check whether the ID generated is already in use
+        seed = seed or random.seed()
+        # We can initialize the faker with multiple locations: can now draw addresses and names from
+        # Germany, US, UK, Spain, France, Italy. Either just a list => all equal weights, or an ordered
+        # dictionary in which weights can be specified.
+        locale_list = ['de_DE', 'en_US', 'en_GB', 'es_ES', 'fr_FR', 'it_IT']
+        fake = Faker(locale_list)
+        fake.seed_instance(seed)
+        # check whether the ID generated is already in use
+        used_ids = set()
         output = []
-        for i in range(num_points):
+        for i in range(self.n_samples):
+            # select a locale at random => will allow us to generate internally consistent city-country pairs
+            # or name/email pairs. Problem is that not all countries might be able to generate all of these
+            # attributes. For example Belgium can't create IP-addresses
+            locale = np.random.choice(locale_list)
             while True:
-                new_id=fake.random_int(min=1, max=num_points)
+                new_id = fake.random_int(min=1, max=self.n_samples)
                 if new_id not in used_ids:
                     used_ids.add(new_id)
                     break
 
             gender = np.random.choice(["Male", "Female"], p=[0.5, 0.5])
-            row = { #this works, but it's technical debt, talk to Léo about it 
+            # this works, but it's technical debt, talk to Léo about it
+            if gender == "male":
+                first_name = fake[locale].first_name_male()
+            else:
+                first_name = fake[locale].first_name_female()
+            last_name = fake[locale].last_name()
+            row = {
                 "id": new_id,
-                "first_name": fake.first_name_male() if gender == "Male" else fake.first_name_female(),
-                "last_name": fake.last_name(),
-                "email": fake.free_email(),
+                "first_name": first_name,
+                "last_name": last_name,
+                # take everything before @, and replace with first name.lastname
+                "email": re.sub(r'^(.*?)@', first_name + "." + last_name + "@", fake[locale].free_email()),
                 "gender": gender,
-                "ip_address": fake.ipv4_private(),
-                "nationality": fake.country()
+                "ip_address": fake[locale].ipv4_private(),
+                "nationality": fake[locale].current_country(),
+                "city": fake[locale].city()
             }
             output.append(row)
         
-        df = pd.DataFrame(output, columns=sensitive_col)
+        df = pd.DataFrame(output, columns=self.sensitive_columns)
         return df
 
 
-############################## Helper functions #####################################################
+##############################
+# Testing area
+##############################
 
-# data loader + collects key information from the dataset
-def get_data(file_path):
-    """
-    Puts data into a dataframe + 
-    """
-    data = pd.read_csv(file_path)  
-    return data
+# define path to the data you want to test
+path_test_data="./Subsample_training.csv"
 
-#define helper function to see your data in terminal 
-def print_first_10_rows(file_path):
-    """
-    Prints the first 10 rows of a csv file
-
-    :param file_path: str, the path of the csv file
-    """
-    df_test=pd.read_csv(file_path)
-    print(df_test.head(10))
-
-
-############################## Testing area #####################################################
-#define path to the data you want to test
-path_test_data="/Users/jeannetton/Desktop/DSBA/CRP/fake/CRP_GDPR_datasets/app/data/MOCK_DATA.csv" #change this
-
-#take the comment out to see the first 10 rows of your data
-#print_first_10_rows(path_test_data)
+# take the comment out to see the first 10 rows of your data
 
 # indicate which columns are categorical, and which are sensitive 
-cat_col=['id', 'first_name', 'last_name', 'email', 'gender', 'ip_address', 'nationality']
-sens_col=['id', 'first_name', 'last_name', 'email', 'gender', 'ip_address', 'nationality']
+cat_cols = ['Married/Single', 'House_Ownership', 'Car_Ownership', 'Profession', 'CITY', 'STATE', 'Risk_Flag']
+sensitive_cols = ["first_name", "last_name","email", "gender", "ip_address", "nationality","city"]
+data = get_data(path_test_data)
+# checking that it can deal with nan values
+data.iloc[3,2] = float("nan")
+print(data.head())
+# create object
+generator = Generator(n_epochs=300, n_samples=100, architecture='CTGAN',
+                      data=data,
+                      categorical_columns=cat_cols,
+                      sensitive_columns= sensitive_cols)
 
-data = get_data(path_test_data) 
-
-#create object
-generator = Generator(n_epochs=100, n_samples=500, architecture='CTGAN',
-                      data=data, 
-                      categorical_columns=['id, first_name, last_name, email, gender, ip_address, ethnicity'],
-                      sensitive_columns={'id': 'random_int', 'first_name': 'first_name','last_name': 'address','email': 'free_email','gender': 'address','ip_address': 'address','Ethnicity': 'address'})
-
-#take the comment out to see the first 10 rows of your data
-#print_first_10_rows(path_test_data)
-
-#synth_data = generator.generate()
-anonymized_data = generator.faker_categorical(sensitive_col=sens_col, num_points=generator.n_samples)
-print(anonymized_data)
-
-
-
-
+synth_data = generator.generate().iloc[:,2:]
+anonymized_data = generator.faker_categorical()
+df = pd.concat([anonymized_data, synth_data], axis=1)
+print(df.columns)
+df.drop(['CITY', 'STATE'], inplace=True, axis=1)
+df.to_csv('synth_data.csv')
 
 
