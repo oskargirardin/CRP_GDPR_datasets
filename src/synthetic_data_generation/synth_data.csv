@@ -1,0 +1,101 @@
+,first_name,last_name,email,gender,ip_address,nationality,city,Income,Age,Experience,Married/Single,House_Ownership,Car_Ownership,Profession,CURRENT_JOB_YRS,CURRENT_HOUSE_YRS,Risk_Flag
+0,Reyna,Alegria,Reyna.Alegria@gmail.com,Male,10.156.10.10,Spain,Lugo,4879972.0,29,10,single,rented,no,Fashion_Designer,3,11,0
+1,Juliette,Martins,Juliette.Martins@laposte.net,Female,192.168.224.244,France,Aubert,7054868.0,76,0,single,rented,no,Flight_attendant,14,12,0
+2,Sophia,Fittipaldi,Sophia.Fittipaldi@virgilio.it,Female,10.164.159.243,Italy,Baganzola,2596196.0,72,16,single,rented,yes,Microbiologist,9,11,0
+3,Carin,Tlustek,Carin.Tlustek@gmx.de,Female,172.25.147.150,Germany,Kötzting,3038470.0,40,18,single,owned,no,Drafter,9,11,0
+4,Reyes,Carrera,Reyes.Carrera@gmail.com,Female,10.93.95.50,Spain,Vizcaya,4040503.0,55,4,single,norent_noown,no,Army_officer,4,10,0
+5,Brittney,Peterson,Brittney.Peterson@gmail.com,Male,192.168.151.79,United States,North Amy,5254160.0,49,12,single,norent_noown,yes,Computer_operator,6,10,0
+6,Bonnie,Rodriguez,Bonnie.Rodriguez@hotmail.com,Male,172.26.29.167,United States,Port Sandra,8612082.0,21,18,single,rented,no,Technology_specialist,6,12,0
+7,Rosalinda,Parra,Rosalinda.Parra@hotmail.com,Female,172.24.83.44,Spain,Baleares,6607473.0,69,4,single,rented,yes,Physician,10,10,0
+8,Patricia,Gibson,Patricia.Gibson@gmail.com,Female,172.18.197.108,United States,Maryside,8350895.0,23,12,single,rented,no,Physician,12,14,0
+9,Melissa,Mckinney,Melissa.Mckinney@hotmail.com,Female,10.196.88.247,United States,East William,8088728.0,34,0,single,rented,yes,Aviator,14,14,0
+10,Olivie,Meyer,Olivie.Meyer@laposte.net,Male,192.168.111.167,France,Delaunay,8042319.0,61,5,single,rented,no,Biomedical_Engineer,10,14,0
+11,Almuth,Rosemann,Almuth.Rosemann@googlemail.com,Female,192.168.107.155,Germany,Lippstadt,9389867.0,37,18,single,rented,yes,Mechanical_engineer,14,10,0
+12,Liana,Gadda,Liana.Gadda@tin.it,Female,172.31.114.29,Italy,Punta Marina,2934345.0,31,3,married,rented,no,Consultant,12,11,0
+13,Josephine,Brown,Josephine.Brown@yahoo.co.uk,Male,10.15.110.76,United Kingdom,Banksside,632772.0,37,7,single,rented,yes,Chef,8,14,0
+14,Federica,Paolini,Federica.Paolini@fastwebnet.it,Male,172.19.10.62,Italy,Urbisaglia,6782010.0,65,15,married,owned,yes,Civil_servant,14,12,0
+15,Nicole,Le Roux,Nicole.Le Roux@gmail.com,Female,10.254.131.236,France,Vaillantnec,2390040.0,70,7,single,rented,no,Aviator,12,13,0
+16,Annelore,Preiß,Annelore.Preiß@gmx.de,Female,192.168.10.43,Germany,Neustadtner Waldnaab,1896004.0,34,4,single,rented,no,Police_officer,8,10,0
+17,Gunda,Keudel,Gunda.Keudel@yahoo.de,Male,172.16.113.170,Germany,Deggendorf,3343293.0,29,6,single,rented,yes,Software_Developer,6,14,0
+18,Jenna,Barnett,Jenna.Barnett@yahoo.com,Female,10.27.220.10,United Kingdom,Lake Geraldine,9527174.0,47,7,single,rented,no,Aviator,14,13,0
+19,Theresa,Hicks,Theresa.Hicks@hotmail.com,Male,172.30.252.44,United States,West Georgemouth,,78,16,single,rented,no,Web_designer,10,14,0
+20,Catharina,Junck,Catharina.Junck@aol.de,Female,172.28.220.41,Germany,Sankt Goar,2019044.0,77,7,single,rented,no,Microbiologist,2,11,1
+21,Dana,Dowerg,Dana.Dowerg@gmail.com,Female,10.134.238.228,Germany,Holzminden,7590843.0,21,18,single,rented,no,Civil_servant,9,14,0
+22,Marisa,Miranda,Marisa.Miranda@hotmail.com,Male,192.168.75.127,Spain,Zaragoza,7568486.0,52,9,married,norent_noown,no,Technical_writer,12,14,0
+23,Élisabeth,Lelièvre,Élisabeth.Lelièvre@voila.fr,Female,10.113.249.212,France,Sainte Geneviève,2804207.0,62,12,single,rented,yes,Dentist,14,13,0
+24,Jessica,Castro,Jessica.Castro@gmail.com,Female,192.168.108.123,United States,Lake Kimfort,7542057.0,61,9,single,rented,yes,Politician,8,14,0
+25,Manon,Pichon,Manon.Pichon@ifrance.com,Male,172.19.57.109,France,Chevallier,7878952.0,79,2,single,owned,yes,Statistician,11,13,0
+26,Adeline,Becker,Adeline.Becker@yahoo.de,Male,192.168.248.80,Germany,Uffenheim,1201692.0,65,3,single,rented,no,Civil_servant,6,10,0
+27,Kirsty,Barrett,Kirsty.Barrett@hotmail.com,Female,10.41.251.164,United Kingdom,Kempmouth,11114.0,61,2,married,rented,no,Computer_operator,10,14,0
+28,Hélène,Adam,Hélène.Adam@tiscali.fr,Female,192.168.17.164,France,Perrotdan,11114.0,28,14,single,rented,yes,Engineer,10,10,0
+29,Gail,Murray,Gail.Murray@gmail.com,Male,172.19.122.44,United States,Lake Nancy,9992133.0,23,5,single,rented,no,Computer_operator,14,12,0
+30,Tatiana,Pacillo,Tatiana.Pacillo@libero.it,Male,10.169.175.3,Italy,Genzone,9835924.0,50,4,single,rented,no,Artist,10,10,0
+31,Florentina,Arcos,Florentina.Arcos@yahoo.com,Female,192.168.95.166,Spain,Segovia,9992133.0,78,20,married,rented,no,Surgeon,13,14,0
+32,Romina,Troisi,Romina.Troisi@tim.it,Female,10.236.46.126,Italy,Santo Stefano Roero,,21,9,single,rented,no,Hotel_Manager,12,12,1
+33,Paloma,Gasperi,Paloma.Gasperi@hotmail.it,Female,192.168.255.39,Italy,Nuchis,9298448.0,21,10,single,rented,no,Lawyer,12,13,0
+34,Giada,Toscani,Giada.Toscani@virgilio.it,Male,10.99.247.22,Italy,Varazze,2589755.0,27,15,single,rented,no,Hotel_Manager,14,14,0
+35,Amaya,Díaz,Amaya.Díaz@yahoo.com,Male,192.168.253.196,Spain,Sevilla,5352110.0,69,3,single,rented,no,Chemical_engineer,9,10,0
+36,Alessandra,Anguillara,Alessandra.Anguillara@gmail.com,Male,172.18.222.68,Italy,Magognino,,35,1,single,rented,no,Artist,13,10,0
+37,Francesca,Turnbull,Francesca.Turnbull@hotmail.com,Male,192.168.99.228,United Kingdom,Hunttown,6877450.0,41,17,single,rented,yes,Chartered_Accountant,13,14,0
+38,Brooke,Lopez,Brooke.Lopez@gmail.com,Female,172.29.10.107,United States,Port Denise,4005153.0,66,18,single,rented,yes,Industrial_Engineer,4,10,0
+39,Florina,Silva,Florina.Silva@gmail.com,Female,172.21.176.141,Spain,Huelva,1766409.0,59,14,single,rented,yes,Aviator,11,14,0
+40,Sarah,Tanner,Sarah.Tanner@yahoo.com,Male,172.17.33.231,United States,Port Michael,1161137.0,48,16,single,rented,yes,Computer_hardware_engineer,7,10,0
+41,Victoria,Johnston,Victoria.Johnston@hotmail.com,Male,192.168.28.60,United States,Edwardsside,6471957.0,43,10,single,norent_noown,no,Civil_servant,4,13,1
+42,Flavia,Zaguri,Flavia.Zaguri@yahoo.com,Female,172.30.182.53,Italy,Longone Al Segrino,7819099.0,79,14,single,rented,yes,Artist,14,12,0
+43,Guadalupe,Morales,Guadalupe.Morales@gmail.com,Female,172.22.232.250,Spain,Teruel,8349419.0,57,16,single,owned,no,Graphic_Designer,11,13,0
+44,Shannon,Jenkins,Shannon.Jenkins@hotmail.co.uk,Female,10.230.146.70,United Kingdom,West Simon,2186399.0,43,4,single,rented,no,Engineer,14,14,0
+45,Pacífica,Pedraza,Pacífica.Pedraza@yahoo.com,Female,192.168.63.158,Spain,Vizcaya,7818770.0,62,16,married,rented,yes,Fashion_Designer,14,12,0
+46,Carolyn,Reynolds,Carolyn.Reynolds@gmail.com,Male,192.168.171.44,United Kingdom,Lake Derekberg,5069772.0,21,17,married,owned,yes,Surgeon,3,13,0
+47,Donna,Cunningham,Donna.Cunningham@gmail.com,Male,172.21.252.251,United States,Scottbury,9772581.0,22,8,married,rented,yes,Engineer,12,13,0
+48,Audrey,Weber,Audrey.Weber@hotmail.com,Female,192.168.214.141,United States,Michaelburgh,8533287.0,40,18,single,rented,no,Design_Engineer,14,12,0
+49,Patricia,Caro,Patricia.Caro@yahoo.com,Male,172.18.27.221,Spain,Cantabria,11114.0,27,3,married,rented,no,Consultant,0,11,0
+50,Melissa,Campbell,Melissa.Campbell@gmail.com,Male,172.27.50.225,United States,Port Christina,3748303.0,39,20,single,rented,no,Chef,14,10,0
+51,Emma,Jurado,Emma.Jurado@yahoo.com,Male,172.16.50.203,Spain,Santa Cruz de Tenerife,,52,6,single,rented,yes,Computer_operator,9,10,0
+52,Danielle,Trub,Danielle.Trub@googlemail.com,Female,192.168.1.59,Germany,Hettstedt,5899892.0,64,19,single,rented,no,Civil_servant,7,13,0
+53,Josette,Renaud,Josette.Renaud@tiscali.fr,Female,192.168.254.193,France,Devaux,6682525.0,43,20,single,rented,yes,Computer_operator,12,14,0
+54,Christine,Germain,Christine.Germain@hotmail.fr,Male,192.168.71.214,France,Renault,6605187.0,73,0,single,rented,no,Chemical_engineer,11,14,0
+55,Francisca,Sanmartín,Francisca.Sanmartín@gmail.com,Male,10.4.55.152,Spain,Málaga,7070305.0,21,20,single,norent_noown,no,Designer,13,12,0
+56,Simonetta,Venditti,Simonetta.Venditti@outlook.com,Female,10.107.145.102,Italy,Crociara,8158777.0,33,11,single,rented,yes,Computer_operator,11,14,0
+57,María José,Alberto,María José.Alberto@hotmail.com,Female,192.168.123.12,Spain,Almería,6104366.0,36,13,single,rented,no,Civil_servant,9,10,0
+58,Melinda,Marsh,Melinda.Marsh@gmail.com,Female,10.34.13.98,United States,Port Devin,6545863.0,24,17,single,rented,no,Drafter,14,12,0
+59,Melanie,Curtis,Melanie.Curtis@yahoo.com,Male,10.41.210.95,United States,North Ericmouth,9992133.0,61,12,single,norent_noown,no,Politician,14,12,0
+60,Caroline,Hill,Caroline.Hill@hotmail.com,Female,172.21.255.114,United States,Bradystad,5672096.0,48,10,single,rented,no,Biomedical_Engineer,2,12,0
+61,Tina,Stokes,Tina.Stokes@gmail.com,Female,10.53.22.146,United Kingdom,East Joshuaton,778215.0,26,12,single,rented,no,Technology_specialist,9,14,0
+62,Annita,Graf,Annita.Graf@googlemail.com,Male,10.157.177.221,Germany,Lüdenscheid,4230171.0,59,0,single,owned,no,Magistrate,14,12,0
+63,Denise,Salmon,Denise.Salmon@club-internet.fr,Female,10.124.125.17,France,Sainte Catherine,3622690.0,52,6,single,rented,no,Mechanical_engineer,10,12,0
+64,Patricia,Leduc,Patricia.Leduc@tiscali.fr,Male,10.3.3.170,France,Diallo-les-Bains,,21,14,single,rented,no,Industrial_Engineer,12,14,0
+65,Bethan,Hurst,Bethan.Hurst@yahoo.com,Female,172.26.45.146,United Kingdom,Carrollport,9948085.0,28,18,single,rented,yes,Financial_Analyst,11,10,0
+66,Naomi,Mason,Naomi.Mason@gmail.com,Male,192.168.232.253,United Kingdom,Port Jordanfurt,703294.0,31,18,single,rented,no,Technician,3,12,0
+67,Susan,Griffin,Susan.Griffin@hotmail.com,Female,192.168.148.57,United States,Jamesview,6803511.0,58,0,single,rented,no,Biomedical_Engineer,12,12,0
+68,Kristiane,Hendriks,Kristiane.Hendriks@yahoo.de,Female,172.23.240.4,Germany,Sulzbach-Rosenberg,2160821.0,21,12,single,rented,no,Politician,6,11,0
+69,Melissa,Schwartz,Melissa.Schwartz@gmail.com,Female,172.22.33.14,United States,Davisburgh,586912.0,47,4,single,rented,yes,Secretary,11,13,0
+70,Nicole,Loiseau,Nicole.Loiseau@orange.fr,Male,10.102.129.195,France,Guichard-sur-Mer,5377064.0,78,18,single,rented,yes,Chartered_Accountant,12,14,0
+71,Dörte,Hauffer,Dörte.Hauffer@web.de,Female,10.168.235.18,Germany,Grevesmühlen,,65,0,single,rented,no,Surveyor,5,10,0
+72,Gisela,Torrens,Gisela.Torrens@hotmail.com,Female,172.25.144.255,Spain,Murcia,8845142.0,48,3,single,rented,no,Statistician,2,14,0
+73,Brittney,Berger,Brittney.Berger@yahoo.com,Male,172.30.218.253,United States,Lopezmouth,11114.0,58,0,single,rented,no,Official,10,12,0
+74,Jennifer,Flowers,Jennifer.Flowers@gmail.com,Male,10.201.116.187,United States,North Helenhaven,3603056.0,70,2,married,norent_noown,no,Police_officer,8,11,0
+75,Tina,Payne,Tina.Payne@hotmail.co.uk,Female,10.94.105.45,United Kingdom,Leahborough,6678746.0,60,20,single,rented,no,Computer_operator,14,14,0
+76,Katie,Ferguson,Katie.Ferguson@hotmail.com,Female,172.23.75.20,United Kingdom,Beverleyview,11114.0,54,17,single,rented,yes,Engineer,7,14,0
+77,Charlotte,Blot,Charlotte.Blot@wanadoo.fr,Male,10.156.222.237,France,Leblanc-la-Forêt,9462920.0,52,0,single,rented,no,Civil_servant,14,12,0
+78,Renate,Junk,Renate.Junk@yahoo.de,Female,10.16.191.66,Germany,Dieburg,2041305.0,33,5,single,rented,no,Civil_engineer,5,12,0
+79,Barbara,Mcdonald,Barbara.Mcdonald@hotmail.com,Female,172.23.71.39,United States,Lopezville,5015554.0,23,17,single,rented,yes,Librarian,12,10,0
+80,Brenda,Holt,Brenda.Holt@gmail.com,Female,192.168.185.209,United Kingdom,North Alison,7305394.0,57,10,single,rented,no,Army_officer,13,14,0
+81,Connie,Stein,Connie.Stein@hotmail.com,Female,192.168.153.49,United States,North Tonyport,7741522.0,62,5,single,rented,yes,Statistician,14,11,0
+82,Jelena,Paffrath,Jelena.Paffrath@aol.de,Female,192.168.163.107,Germany,Luckenwalde,2820330.0,62,6,single,rented,yes,Financial_Analyst,13,13,0
+83,Adélaïde,Rossi,Adélaïde.Rossi@noos.fr,Male,172.16.184.37,France,Jean-sur-Giraud,8573924.0,44,10,single,rented,yes,Petroleum_Engineer,6,13,0
+84,Amélie,Denis,Amélie.Denis@tiscali.fr,Male,172.31.215.99,France,Saint Olivier,,21,0,married,norent_noown,yes,Drafter,3,10,0
+85,Griselda,Pisaroni,Griselda.Pisaroni@hotmail.it,Male,10.203.220.248,Italy,Arcinazzo Romano,2543317.0,32,13,single,rented,no,Aviator,13,12,0
+86,Susanne,Laroche,Susanne.Laroche@tiscali.fr,Male,192.168.134.109,France,Vincent-sur-Georges,891036.0,27,0,single,owned,no,Software_Developer,6,12,0
+87,Alessia,Pietrangeli,Alessia.Pietrangeli@fastwebnet.it,Male,192.168.180.143,Italy,De Matteis,4792105.0,62,11,single,rented,no,Chemical_engineer,9,10,0
+88,Margaret,Roux,Margaret.Roux@live.com,Male,10.238.37.145,France,Guyot-sur-Mer,8007356.0,56,19,single,rented,yes,Technical_writer,4,13,0
+89,Calixta,Rosselló,Calixta.Rosselló@yahoo.com,Male,172.16.92.69,Spain,Madrid,8542568.0,28,4,single,owned,yes,Designer,13,10,0
+90,Rossana,Parpinel,Rossana.Parpinel@hotmail.it,Female,10.173.45.10,Italy,Lezzeno,5387629.0,77,17,single,rented,no,Economist,12,13,0
+91,Vicki,Carter,Vicki.Carter@gmail.com,Female,10.22.212.185,United States,Lake Tammy,7235848.0,66,16,married,rented,yes,Chartered_Accountant,13,12,0
+92,Giulia,Cantimori,Giulia.Cantimori@yahoo.com,Female,192.168.99.94,Italy,Kurtinig,6966084.0,72,2,single,norent_noown,yes,Financial_Analyst,4,11,0
+93,Stéphanie,Bonnin,Stéphanie.Bonnin@free.fr,Male,192.168.42.161,France,Launay-sur-Mer,4099010.0,42,6,married,rented,yes,Aviator,11,11,0
+94,Amaya,Saldaña,Amaya.Saldaña@gmail.com,Male,192.168.16.41,Spain,Sevilla,9200048.0,61,17,single,rented,no,Biomedical_Engineer,13,10,0
+95,Julie,Scott,Julie.Scott@yahoo.com,Male,192.168.46.21,United Kingdom,Wellsberg,8578074.0,53,1,single,norent_noown,no,Statistician,13,10,0
+96,Ellinor,Weller,Ellinor.Weller@web.de,Female,10.205.246.6,Germany,Duderstadt,9992133.0,69,2,single,rented,yes,Engineer,14,12,0
+97,Yvonne,Jackson,Yvonne.Jackson@gmail.com,Male,10.141.98.120,United Kingdom,Dawnland,5244662.0,79,0,married,rented,yes,Technology_specialist,10,12,0
+98,Catherine,Georges,Catherine.Georges@bouygtel.fr,Female,10.200.15.71,France,LeconteBourg,6863113.0,65,7,single,rented,no,Aviator,12,14,0
+99,Encarnacion,Toledo,Encarnacion.Toledo@hotmail.com,Female,10.102.35.152,Spain,Ávila,7713440.0,66,0,single,rented,no,Web_designer,9,10,0
