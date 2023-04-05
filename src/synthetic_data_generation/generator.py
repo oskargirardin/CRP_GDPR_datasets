@@ -6,8 +6,9 @@ from collections import OrderedDict
 from sdv.tabular import CTGAN, GaussianCopula
 from sdv.evaluation import evaluate
 from table_evaluator import TableEvaluator
-from src.utils import *
+import utils
 import re
+from similarity_check.SimilarityCheck import *
 
 class Generator:
 
@@ -110,33 +111,6 @@ class Generator:
         return df
 
 
-##############################
-# Testing area
-##############################
 
-# define path to the data you want to test
-path_test_data="./Subsample_training.csv"
-
-# take the comment out to see the first 10 rows of your data
-
-# indicate which columns are categorical, and which are sensitive 
-cat_cols = ['Married/Single', 'House_Ownership', 'Car_Ownership', 'Profession', 'CITY', 'STATE', 'Risk_Flag']
-sensitive_cols = ["first_name", "last_name","email", "gender", "ip_address", "nationality","city"]
-data = get_data(path_test_data)
-# checking that it can deal with nan values
-data.iloc[3,2] = float("nan")
-print(data.head())
-# create object
-generator = Generator(n_epochs=300, n_samples=100, architecture='CTGAN',
-                      data=data,
-                      categorical_columns=cat_cols,
-                      sensitive_columns= sensitive_cols)
-
-synth_data = generator.generate().iloc[:,2:]
-anonymized_data = generator.faker_categorical()
-df = pd.concat([anonymized_data, synth_data], axis=1)
-print(df.columns)
-df.drop(['CITY', 'STATE'], inplace=True, axis=1)
-df.to_csv('synth_data.csv')
 
 
