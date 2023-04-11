@@ -3,6 +3,9 @@
 ## Structure of library
 
 ### Generator
+
+Generates synthetic data using two different generative models, either CTGAN or GaussianCopula. 
+
 Attributes:
 - Architecture (ctgan, pategan, gaussiancopula,...)
 - Number of epochs
@@ -11,8 +14,8 @@ Attributes:
 - List of columns of privacy concerns
 
 Methods:
-- Main method that implements the logic and calls other methods that implement the specific architectures
-- Method for each individual architecture
+- generate: this method generates synthetic data using the chosen generative model (either CTGAN or GaussianCopula) and returns it as a pandas dataframe.
+- faker_categorical: this method uses the Faker library to generate fake categorical data. This is not intended for use in machine learning models, but can be useful for testing or generating data for non-sensitive use cases.
 - Method for manual correction of privacy sensitive columns (GAN would never generate new emailaddresses from a column, so privacy concerns would remain, we have to fake them with faker or Chat-GPT,...)
 
 
