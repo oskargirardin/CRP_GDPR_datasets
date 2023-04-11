@@ -28,7 +28,8 @@ Methods:
 - Making visualizations
 - Privacy checks
 
-### Privacy check (Based on SDMetrics Diagnostic Report: https://docs.sdv.dev/sdmetrics/reports/diagnostic-report/single-table-api)
+### Privacy check 
+(Based on SDMetrics Diagnostic Report: https://docs.sdv.dev/sdmetrics/reports/diagnostic-report/single-table-api)
 Attributes:
 - Synthesis, Coverage, Boundaries scores
 - Real data
