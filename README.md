@@ -47,15 +47,15 @@ This project contains a Python script main.py that generates synthetic data usin
 
 ## Usage
 
-1. Clone this repository to your local machine.
-2. Install the required libraries using pip install -r requirements.txt.
-3. Modify the parameters passed to the Generator class in main.py
-3.1 Change the path to your csv (path_test_data)
-3.2 Change the list of categorical columns (cat_cols)
-3.3 Change the list of sensitive columns (sensitive_cols)
-3.4 Change the metadata (my_metadata)
-4. Modify the path_test_data, cat_cols, and sensitive_cols variables in main.py to match your data.
-5. Run main.py using python main.py.
+*Clone this repository to your local machine.
+*Install the required libraries using pip install -r requirements.txt.
+*Modify the parameters passed to the Generator class in main.py
+- Change the path to your csv (path_test_data)
+- Change the list of categorical columns (cat_cols)
+- Change the list of sensitive columns (sensitive_cols)
+- Change the metadata to specify the type of data you want to generate (my_metadata)
+*Modify the path_test_data, cat_cols, and sensitive_cols variables in main.py to match your data.
+*Run main.py using python main.py.
 
 The generated synthetic data will be outputted to the console and stored in a CSV file named synth_data.csv if you uncomment #df.to_csv('synth_data.csv'). The similarity between the original and generated data will also be evaluated and printed to the console. 
 
