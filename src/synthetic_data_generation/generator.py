@@ -3,16 +3,16 @@ import numpy as np
 from faker import Faker
 import random
 from collections import OrderedDict
-from sdv.tabular import CTGAN, GaussianCopula
-from sdv.evaluation import evaluate
-from table_evaluator import TableEvaluator
-import utils
+from sdv.metadata import SingleTableMetadata
+from sdv.single_table import CTGANSynthesizer, GaussianCopulaSynthesizer
+import torch
 import re
-from similarity_check.SimilarityCheck import *
+from sdv.metadata import SingleTableMetadata
+
 
 class Generator:
 
-    def __init__(self, data, architecture, n_samples,n_epochs = None, categorical_columns = None, sensitive_columns = None):
+    def __init__(self, data, architecture, n_samples, n_epochs=None, categorical_columns=None, sensitive_columns=None):
 
         """
         :param n_epochs: the number of epochs used for training
@@ -22,6 +22,9 @@ class Generator:
         :param categorical_columns: a list with categorical columns
         :param sensitive_columns: a dict with sensitive columns and what  category they belong to
         The categories can be found in the faker_categorical function
+
+        The metadata: an sdv metadata object required to call CTGAN and other methods
+        Also required for similarity checks
         """
 
         self.n_epochs = n_epochs
@@ -31,10 +34,16 @@ class Generator:
         else:
             print('The requested architecture is not available')
             raise ValueError
-
+        print('Retrieving metadata, check with generator.metadata')
+        self.metadata = self.create_metadata()
         self.data = data
         self.categorical_columns = categorical_columns
         self.sensitive_columns = sensitive_columns
+
+    def create_metadata(self):
+        metadata = SingleTableMetadata()
+        metadata.detect_from_dataframe(data=minority_df)
+        return metadata
 
     def generate(self):
         """
@@ -42,16 +51,16 @@ class Generator:
         :return: synthetic data, a pandas dataframe
         """
 
-        # TODO: Add more generators, especially PATEGAN or other differentially private ones synthcity seems to have
+        #  TODO: Add more generators, especially PATEGAN or other differentially private ones synthcity seems to have
         #  implementations of these, but I have not been able to import their library
 
         if self.architecture == "CTGAN":
-            model = CTGAN(epochs=self.n_epochs)
+            model = CTGANSynthesizer(metadata=self.metadata, epochs=self.n_epochs, verbose=True)
             model.fit(self.data)
             synth_data = model.sample(self.n_samples)
 
         elif self.architecture == "GaussianCopula":
-            model = GaussianCopula()
+            model = GaussianCopulaSynthesizer(metadata=self.metadata)
             model.fit(self.data)
             synth_data = model.sample(self.n_samples)
 
@@ -106,11 +115,6 @@ class Generator:
                 "city": fake[locale].city()
             }
             output.append(row)
-        
+
         df = pd.DataFrame(output, columns=self.sensitive_columns)
         return df
-
-
-
-
-
