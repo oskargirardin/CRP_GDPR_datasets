@@ -5,16 +5,16 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 from table_evaluator import TableEvaluator
-from sdmetrics.reports.single_table import QualityReport
+from sdv.evaluation.single_table import evaluate_quality
 
 # TODO: ML model performance and test correlation
 
 #############
 # The quality report needs metadata
 # sdv can deduce this from the dataframe, but it does not yet work on my computer
-#from sdv.metadata import SingleTableMetadata
-#metadata = SingleTableMetadata()
-#metadata.detect_from_dataframe(data=my_pandas_dataframe)
+# from sdv.metadata import SingleTableMetadata
+# metadata = SingleTableMetadata()
+# metadata.detect_from_dataframe(data=my_pandas_dataframe)
 
 
 class SimilarityCheck:
@@ -26,12 +26,15 @@ class SimilarityCheck:
     def __init__(self, real_data, synthetic_data, cat_cols, metadata):
         self.real_data = real_data
         self.synthetic_data = synthetic_data
-        self.cat_cols = cat_cols
+        if cat_cols is not None:
+          self.cat_cols = cat_cols
+        else:
+          self.cat_cols = []
         self.metadata = metadata
         ############
         # We can immediately call the functions upon initialization
-        self.comparison_columns()
         self.visual_comparison_columns()
+        #self.comparison_columns()
 
     #def check_similarity(self):
       #  evaluator = TableEvaluator(real=self.real_data, fake=self.synthetic_data, cat_cols=self.cat_cols)
@@ -40,13 +43,17 @@ class SimilarityCheck:
     def comparison_columns(self):
         '''
         :return: the KL divergence for numerical variables...
-        basically a numerical performance for the whole synthetic data and for each column
-        requires metadata, which is defined in the main for this data!!
+        tested and works
         '''
-        report = QualityReport()
-        print(report.generate(self.real_data, self.synthetic_data, self.metadata))
-        print(report.get_details(property_name='Column Shapes')
-)
+        quality_report = evaluate_quality(
+          real_data=self.real_data,
+          synthetic_data=self.synthetic_data,
+          metadata=self.metadata)
+
+        #report = QualityReport()
+        #print(report.generate(self.real_data, self.synthetic_data, self.metadata))
+        #print(report.get_details(property_name='Column Shapes')
+
 
     def visual_comparison_columns(self):
         '''
@@ -61,10 +68,9 @@ class SimilarityCheck:
             print('Columns in real and synthetic data not the same!')
             return
 
-        fig, ax = plt.subplots(nrows=len(self.real_data.columns), figsize=(100, 100))
+        fig, ax = plt.subplots(nrows=len(self.real_data.columns), figsize=(len(self.real_data.columns), len(self.real_data.columns)))
 
         for i, column in enumerate(self.real_data.columns):
-
             if column not in self.cat_cols:
                 sns.kdeplot(self.real_data[column], ax=ax[i], label='Real', fill=True, color='c')
                 sns.kdeplot(self.synthetic_data[column], ax=ax[i], label='Synthetic', fill=True, color='m')
@@ -100,6 +106,5 @@ class SimilarityCheck:
         score_synth = fitted_model_synth.score(X_test, y_test)
         print(f"Score on real dataset: {score_real}\nScore on synthetic dataset: {score_synth}")
         return score_real, score_synth
-
 
 
