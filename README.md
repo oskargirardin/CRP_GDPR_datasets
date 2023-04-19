@@ -7,7 +7,8 @@
 Generates synthetic data using two different generative models, either CTGAN or GaussianCopula. 
 
 Initialize a generator object using the following function call: 
-  * Generator(data, architecture, n_samples, n_epochs=None, categorical_columns=None, sensitive_columns=None))
+
+    generator = Generator(data, architecture, n_samples, n_epochs=None, categorical_columns=None, sensitive_columns=None))
 
 Parameters:
   * Real data
@@ -30,46 +31,91 @@ Attributes:
 
 
 Methods:
-  * create_metadata()
-  This function takes in the training dataframe and outputs metadata that can be accessed through the Generator.metadata attribute. It is automatically called upon creation of the generator object but should be checked before calling the generate function described below. 
-  * generate: 
-this method generates synthetic data using the chosen generative model (either CTGAN or GaussianCopula) and returns it as a pandas dataframe.
-- faker_categorical: this method uses the Faker library to generate fake categorical data. This is not intended for use in machine learning models as correlations with the real data are not maintained.  However, it can be used as an alternative for dropping sensitive data columns. Currently, the following types of data can be faked: 
+  1. create_metadata(): This function takes in the training dataframe and outputs metadata that can be accessed through the Generator.metadata attribute. It is automatically called upon creation of the generator object but should be checked before calling the generate function described below. 
 
-  * ID: an identifier
-  * First name
-  * Last name
-  * email
-  * gender
-  * ip_address
-  * nationality
-  * city
+    generator.create_metadata()
+  3. generate(): this method generates synthetic data using the chosen generative model (either CTGAN or GaussianCopula) and returns it as a pandas dataframe.
+
+    generator.generate()
+  5. faker_categorical(): this method uses the Faker library to generate fake categorical data. This is not intended for use in machine learning models as correlations with the real data are not maintained.  However, it can be used as an alternative for dropping sensitive data columns. Currently, the following types of data can be faked: 
+
+    * ID: an identifier
+    * First name
+    * Last name
+    * email
+    * gender
+    * ip_address
+    * nationality
+    * city
+   
 
 We want to stress again that these attributes should not be used in a Machine Learning model and are purely there for anonymization purposes. 
+
+    generator.faker_categorical()
 
 
 
 ### Similarity Check
 
-Contains the SimilarityCheck class, which checks the quality of synthetic data both visually and with metrics. This class takes in the real and synthetic data, categorical columns, and metadata as input.
+The SimilarityCheck class is used to check the quality of synthetic data, both visually and with metrics. It provides methods to compare the real and synthetic data, generate visual comparisons, and compare the performance of machine learning models trained on real and synthetic data.
+
+To initialize an instance of the SimilarityCheck class, the following arguments need to be passed:
+
+ * real_data: a Pandas dataframe containing the real data
+ * synthetic_data: a Pandas dataframe containing the synthetic data
+ * cat_cols: a list of categorical columns in the data (optional)
+ * metadata: metadata for the data (optional), included in the generator object.
+
+sim_check = SimilarityCheck(real_data=my_real_dataframe,
+                            synthetic_data=my_synthetic_dataframe,
+                            cat_cols=my_categorical_columns,
+                            metadata=metadata)
+Methods
+
+#### TODO: make figure of adaptive size based on number of columns and find a way to display categorical columns with limited categories
+**1. visual_comparison_columns()**
+
+This method generates visual comparisons between the real and synthetic data. It plots data in one of three ways:
+
+ * Numeric columns are plotted using the densities
+ * Categorical columns with limited (less than 5) categories are plotted with a bar plot
+ * For categorical columns with more than five categories, it plots a density histogram.
+
+The function can be calles like this: 
+    
+    sim_check.visual_comparison_columns()
 
 
-Attributes:
-- Type of data
-- Metrics to check
-- Real table
-- Synthetic table
+**2. comparison_columns()** 
 
-Methods:
-- Calculating the metrics
-- Making visualizations
-- Privacy checks
+This method compares the KL divergence for numerical variables.
 
-### Customization of similarity check
+    sim_check.comparison_columns()
 
-The SimilarityCheck class provides methods for comparing real and synthetic data using different visualizations, including KDE plots for numerical data and bar plots for categorical data. You can customize the behavior of the visualizations by modifying the parameters passed to these methods.
+#### Not tested yet
+**3. compare_correlations()** 
 
-You can also customize the metrics used by the comparison_columns method by modifying the metadata argument. This metadata can be inferred from the dataframe using the SingleTableMetadata class from the sdv.metadata module.
+This method compares correlation matrices between the real and synthetic data.
+
+    sim_check.compare_correlations()
+
+#### Not tested yet
+**4. compare_model_performance()**
+
+
+This method compares the performance of machine learning models trained on real and synthetic data. It takes four arguments:
+
+fitted_model_real: a machine learning model trained on the real data
+fitted_model_synth: a machine learning model trained on the synthetic data
+X_test: test features
+y_test: test targets
+
+    sim_check.compare_model_performance(fitted_model_real=my_fitted_model_real,
+                                     fitted_model_synth=my_fitted_model_synth,
+                                     X_test=my_test_features,
+                                     y_test=my_test_targets)
+
+
 
 ### Privacy check 
 (Based on SDMetrics Diagnostic Report: https://docs.sdv.dev/sdmetrics/reports/diagnostic-report/single-table-api)
