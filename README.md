@@ -66,7 +66,7 @@ To initialize an instance of the SimilarityCheck class, the following arguments 
  * cat_cols: a list of categorical columns in the data (optional)
  * metadata: metadata for the data (optional), included in the generator object.
 
-sim_check = SimilarityCheck(real_data=my_real_dataframe,
+       sim_check = SimilarityCheck(real_data=my_real_dataframe,
                             synthetic_data=my_synthetic_dataframe,
                             cat_cols=my_categorical_columns,
                             metadata=metadata)
