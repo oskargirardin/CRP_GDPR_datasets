@@ -152,7 +152,6 @@ This project contains a Python script main.py that generates synthetic data usin
   - Change the path to your csv (path_test_data)
   - Change the list of categorical columns (cat_cols)
   - Change the list of sensitive columns (sensitive_cols)
-  - Change the metadata to specify the type of data you want to generate (my_metadata)
 * Run main.py using python main.py.
 
 The generated synthetic data will be outputted to the console and stored in a CSV file named synth_data.csv if you uncomment #df.to_csv('synth_data.csv'). The similarity between the original and generated data will also be evaluated and printed to the console. 
