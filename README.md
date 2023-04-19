@@ -6,17 +6,47 @@
 
 Generates synthetic data using two different generative models, either CTGAN or GaussianCopula. 
 
-Attributes:
-- Architecture (ctgan, pategan, gaussiancopula,...)
-- Number of epochs
-- Training data
-- List of categorical columns 
-- List of columns of privacy concerns
+Initialize a generator object using the following function call: 
+  * Generator(data, architecture, n_samples, n_epochs=None, categorical_columns=None, sensitive_columns=None))
+
+Parameters:
+  * Real data
+  * Architecture (ctgan, gaussiancopula,...)
+  * n_samples refers to the number of synthetic samples to generate. 
+  * Number of epochs
+  * List of categorical columns 
+  * List of columns of privacy concerns
+
+Attributes: 
+
+  * n_epochs
+  * n_samples
+  * architecture
+  * metadata
+  * data
+  * categorical_columns
+  * sensitive columns
+
+
 
 Methods:
-- generate: this method generates synthetic data using the chosen generative model (either CTGAN or GaussianCopula) and returns it as a pandas dataframe.
-- faker_categorical: this method uses the Faker library to generate fake categorical data. This is not intended for use in machine learning models, but can be useful for testing or generating data for non-sensitive use cases.
-- Method for manual correction of privacy sensitive columns (GAN would never generate new emailaddresses from a column, so privacy concerns would remain, we have to fake them with faker or Chat-GPT,...)
+  * create_metadata()
+  This function takes in the training dataframe and outputs metadata that can be accessed through the Generator.metadata attribute. It is automatically called upon creation of the generator object but should be checked before calling the generate function described below. 
+  * generate: 
+this method generates synthetic data using the chosen generative model (either CTGAN or GaussianCopula) and returns it as a pandas dataframe.
+- faker_categorical: this method uses the Faker library to generate fake categorical data. This is not intended for use in machine learning models as correlations with the real data are not maintained.  However, it can be used as an alternative for dropping sensitive data columns. Currently, the following types of data can be faked: 
+
+  * ID: an identifier
+  * First name
+  * Last name
+  * email
+  * gender
+  * ip_address
+  * nationality
+  * city
+
+We want to stress again that these attributes should not be used in a Machine Learning model and are purely there for anonymization purposes. 
+
 
 
 ### Similarity Check
