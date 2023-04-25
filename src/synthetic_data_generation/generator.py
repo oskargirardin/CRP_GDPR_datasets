@@ -8,41 +8,51 @@ from sdv.single_table import CTGANSynthesizer, GaussianCopulaSynthesizer
 import torch
 import re
 from sdv.metadata import SingleTableMetadata
+from realtabformer import REaLTabFormer
 
 
 class Generator:
 
-    def __init__(self, data, architecture, n_samples, n_epochs=None, categorical_columns=None, sensitive_columns=None):
+    def __init__(self, data, architecture, n_samples, num_epochs=None, num_bootstrap=None, categorical_columns=None,
+                 sensitive_columns=None):
 
         """
-        :param n_epochs: the number of epochs used for training
+        :param n_epochs: the number of epochs used for training, default is 200
+        :param num_bootstraps: number of bootstraps for the RealTabFormer, default is 500
         :param n_samples: the number of rows to generate
-        :param architecture: the chosen architecture, one of ['CTGAN', 'GaussianCopula']
+        :param architecture: the chosen architecture, one of ['CTGAN', 'GaussianCopula', 'RealTabFormer']
         :param data: the data that should be trained on, should be in a pandas dataframe
         :param categorical_columns: a list with categorical columns
         :param sensitive_columns: a dict with sensitive columns and what  category they belong to
         The categories can be found in the faker_categorical function
-
         The metadata: an sdv metadata object required to call CTGAN and other methods
         Also required for similarity checks
         """
-
-        self.n_epochs = n_epochs
+        if num_epochs is not None:
+            self.num_epochs = num_epochs
+        else:
+            # Default value for RealTabFormer and could be enough for CTGAN
+            self.num_epochs = 200
+        if num_bootstrap is not None:
+            self.num_bootstrap = num_bootstrap
+        else:
+            # Set to default for RealTabFormer
+            self.num_bootstrap = 500
         self.n_samples = n_samples
-        if architecture in ['CTGAN', 'GaussianCopula']:
+        if architecture in ['CTGAN', 'GaussianCopula', 'RealTabFormer']:
             self.architecture = architecture
         else:
             print('The requested architecture is not available')
             raise ValueError
         print('Retrieving metadata, check with generator.metadata')
-        self.metadata = self.create_metadata()
         self.data = data
+        self.metadata = self.create_metadata()
         self.categorical_columns = categorical_columns
         self.sensitive_columns = sensitive_columns
 
     def create_metadata(self):
         metadata = SingleTableMetadata()
-        metadata.detect_from_dataframe(data=minority_df)
+        metadata.detect_from_dataframe(data=self.data)
         return metadata
 
     def generate(self):
@@ -55,7 +65,7 @@ class Generator:
         #  implementations of these, but I have not been able to import their library
 
         if self.architecture == "CTGAN":
-            model = CTGANSynthesizer(metadata=self.metadata, epochs=self.n_epochs, verbose=True)
+            model = CTGANSynthesizer(metadata=self.metadata, epochs=self.num_epochs, verbose=True)
             model.fit(self.data)
             synth_data = model.sample(self.n_samples)
 
@@ -63,6 +73,15 @@ class Generator:
             model = GaussianCopulaSynthesizer(metadata=self.metadata)
             model.fit(self.data)
             synth_data = model.sample(self.n_samples)
+        elif self.architecture == "RealTabFormer":
+            model = REaLTabFormer(
+                model_type="tabular",
+                epochs=self.num_epochs,
+                gradient_accumulation_steps=4,
+                # Output log each 2O steps
+                logging_steps=20)
+            model.fit(self.data, num_bootstrap=self.num_bootstrap)
+            synth_data = model.sample(n_samples=len(data))
 
         return synth_data
 
