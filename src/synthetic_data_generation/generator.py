@@ -35,14 +35,14 @@ class Generator:
             print('The requested architecture is not available')
             raise ValueError
         print('Retrieving metadata, check with generator.metadata')
-        self.metadata = self.create_metadata()
         self.data = data
+        self.metadata = self.create_metadata()
         self.categorical_columns = categorical_columns
         self.sensitive_columns = sensitive_columns
 
     def create_metadata(self):
         metadata = SingleTableMetadata()
-        metadata.detect_from_dataframe(data=minority_df)
+        metadata.detect_from_dataframe(data=self.data)
         return metadata
 
     def generate(self):
