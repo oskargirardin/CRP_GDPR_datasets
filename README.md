@@ -27,6 +27,7 @@ Attributes:
   * num_bootstrap: number of bootstraps for RealTabFormer, default = 500, can be used to speed up process
   * n_samples: number of samples to generate
   * architecture: CTGAN, GaussianCopula or RealTabFormer
+The RealTabFormer can overfit the real data and generate equivalent rows if it trains for too long. This can be checked with the privacy check class described below. If too many rows are equivalent to the real data, we suggest limiting the number of epochs. 
   * metadata
   * data
   * categorical_columns
