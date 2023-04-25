@@ -2,7 +2,10 @@
 
 ## Structure of library
 
+Requirements: the working of SDV requires pytorch to be below version 2.0 and above 1.8
+
 ### Generator
+
 
 Generates synthetic data using two different generative models, either CTGAN or GaussianCopula. 
 
@@ -12,7 +15,7 @@ Initialize a generator object using the following function call:
 
 Parameters:
   * Real data
-  * Architecture (ctgan, gaussiancopula,...)
+  * Architecture (ctgan, gaussiancopula,RealTabFormer)
   * n_samples refers to the number of synthetic samples to generate. 
   * Number of epochs
   * List of categorical columns 
@@ -20,9 +23,10 @@ Parameters:
 
 Attributes: 
 
-  * n_epochs
-  * n_samples
-  * architecture
+  * num_epochs: number of epochs to train, default = 200
+  * num_bootstrap: number of bootstraps for RealTabFormer, default = 500, can be used to speed up process
+  * n_samples: number of samples to generate
+  * architecture: CTGAN, GaussianCopula or RealTabFormer
   * metadata
   * data
   * categorical_columns
@@ -72,7 +76,6 @@ To initialize an instance of the SimilarityCheck class, the following arguments 
                             metadata=metadata)
 Methods
 
-#### TODO: make figure of adaptive size based on number of columns and find a way to display categorical columns with limited categories
 **1. visual_comparison_columns()**
 
 This method generates visual comparisons between the real and synthetic data. It plots data in one of three ways:
@@ -92,15 +95,15 @@ This method compares the KL divergence for numerical variables.
 
     sim_check.comparison_columns()
 
-#### Not tested yet
+
 **3. compare_correlations()** 
 
 This method compares correlation matrices between the real and synthetic data.
 
     sim_check.compare_correlations()
 
-#### Not tested yet
 **4. compare_model_performance()**
+#### Not tested yet
 
 
 This method compares the performance of machine learning models trained on real and synthetic data. It takes four arguments:
