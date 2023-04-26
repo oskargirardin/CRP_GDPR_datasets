@@ -5,6 +5,7 @@ from sklearn.preprocessing import StandardScaler
 import scipy
 import pandas as pd
 import numpy as np
+import tqdm
 
 class PrivacyCheck(DiagnosticReport):
     """
@@ -62,20 +63,21 @@ class PrivacyCheck(DiagnosticReport):
         return super().get_properties()
     
 
-    def generate_privacy_score(self):
-        print("Generating report...", end = "")
-        score, pairs = self._nn_privacy_score(dist_threshold=self.dist_threshold, only_cat=self.only_cat)
-        print("Done!")
+    def generate_privacy_score(self, verbose = True):
+        """
+        Function to generate privacy score based on nearest neighbours
+        """
+        score, pairs = self._nn_privacy_score(only_cat=self.only_cat, verbose=verbose)
         self.score = score
         self.pairs = pairs
 
     def get_privacy_score(self, verbose = True, k = 3):
+        """
+        Get the privacy score that was computed previously.
+        """
         if verbose:
-            critical_pairs = list(filter(lambda x: x[2] < self.dist_threshold, self.pairs))
-            n_critical_pairs = len(critical_pairs)
             print("############ SCORE ############")
             print(f"Privacy score: {self.score*100: .2f}%")
-            #print(f"Number of critical pairs with threshold {self.dist_threshold}: {n_critical_pairs}/{len(self.synthetic_data)}")
             print(f"############ TOP {k} CLOSEST PAIRS ############")
             self._display_k_closest_pairs(k)
         return self.score, self.pairs
@@ -84,6 +86,13 @@ class PrivacyCheck(DiagnosticReport):
     def _dist_metric(arr1, arr2, dtypes, only_cat = False):
         """
         Function that computes a distance between two arrays with data types dtypes
+
+        :param arr1: first array (pd.Series with column names)
+        :param arr2: second array (pd.Series with column names)
+        :param dtypes: dictionary with column names as keys and type as value
+        :param only_cat: boolean that indicates if we should only consider categorical columns to compute the distance
+
+        return: distance (float)
         """
         assert len(arr1) == len(arr2), "Arrays not the same length"
         n = len(arr1)
@@ -101,8 +110,15 @@ class PrivacyCheck(DiagnosticReport):
         return dist/n if not only_cat else dist/(n-n_num_cols)
 
 
-    def _nn_privacy_score(self, dist_threshold = 0.1, only_cat = False):
-        self.dist_threshold = dist_threshold
+    def _nn_privacy_score(self, only_cat = False, verbose = True):
+        """
+        Function that computes the privacy score of the synthetic data
+
+        :param only_cat: boolean that indicates if we should only consider categorical columns to compute the distance
+
+        return: score (float), list of nearest neighbours of all sythentic rows
+        """
+        # Initialization
         nneighbour_idx = []
         dists_nn = []
         n_samples = len(self.synthetic_data)
@@ -110,25 +126,36 @@ class PrivacyCheck(DiagnosticReport):
         dtypes = {col: col_type["type"] for col, col_type in self.metadata["fields"].items()}
         numeric_cols = [col for col, type in dtypes.items() if type == "numerical"]
         scaler = StandardScaler()
-        df_r = df_r
+        # Normalize numeric columns -> equal weights to each col
         df_r[numeric_cols] = scaler.fit_transform(df_r[numeric_cols])
         df_s[numeric_cols] = scaler.transform(df_s[numeric_cols])
-        for idx_synth in range(n_samples):
+        # Loop over rows in synthetic dataset
+        for idx_synth in tqdm.tqdm(range(n_samples), desc='Computing privacy score', disable=(not verbose)):
             row = df_s.iloc[idx_synth]
+            # Compute distance to every real row
             dists = df_r.apply(lambda x: PrivacyCheck._dist_metric(row, x, dtypes, only_cat), axis = 1)
+            # Find minimal distance and append neighbour index
             min_dist = dists.min()
             dists_nn.append(min_dist)
             idx_neighbour = dists.argmin()
             nneighbour_idx += [(idx_synth, idx_neighbour, min_dist)]
-       
-        return 1-min(dists_nn), nneighbour_idx
+
+        # Score is determined only by the closest distance among all nearest neighbours
+        # For privacy, we need every synthetic row to be sufficiently different from every real row.
+        score = 1 - min(dists_nn)
+        return score, nneighbour_idx
 
     def _display_k_closest_pairs(self, k):
+        """
+        Displays the k closest pairs
+
+        :param k (int): number of closest pairs to display 
+        """
         pairs_sorted = sorted(self.pairs, key = lambda x: x[2])
         k_closest_pairs = pairs_sorted[:k]
         for i in range(k):
             idx_synth, idx_neighbour, dist = k_closest_pairs[i]
             df = pd.concat([self.synthetic_data.iloc[idx_synth], self.original_data.iloc[idx_neighbour]], axis = 1)
             df.columns = [f"Synthetic obs. (idx: {idx_synth})", f"Closest real obs. (idx: {idx_neighbour})"]
-            print(f"# {i+1}. Closest pair with distance: {dist: .4f}")
+            print(f"{i+1}. Closest pair with distance: {dist: .4f}")
             display(Markdown(df.to_markdown()))
