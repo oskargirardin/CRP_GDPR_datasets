@@ -14,7 +14,7 @@ from realtabformer import REaLTabFormer
 class Generator:
 
     def __init__(self, data, architecture, n_samples, num_epochs=None, num_bootstrap=None, categorical_columns=None,
-                 sensitive_columns=None, date_columns = None):
+                 sensitive_columns=None):
 
         """
         :param n_epochs: the number of epochs used for training, default is 200
@@ -50,6 +50,8 @@ class Generator:
         self.categorical_columns = categorical_columns
         self.sensitive_columns = sensitive_columns
         
+        #TO FIGURE OUT
+        ''' 
         if date_columns is not None:
           self.date_columns = date_columns
 
@@ -59,7 +61,7 @@ class Generator:
             self.data[col+'_day'] = pd.to_datetime(self.data[col]).dt.day
           
           self.data = self.data.drop(self.date_columns, axis=1)
-
+        '''
     def create_metadata(self):
         metadata = SingleTableMetadata()
         metadata.detect_from_dataframe(data=self.data)
