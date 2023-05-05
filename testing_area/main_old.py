@@ -1,3 +1,5 @@
+import sys
+sys.path.append('..')
 import pandas as pd
 import numpy as np
 from faker import Faker
@@ -8,8 +10,8 @@ from sdv.evaluation import evaluate
 from table_evaluator import TableEvaluator
 from src.utils import *
 import re
-from similarity_check.SimilarityCheck import *
-from synthetic_data_generation.generator import *
+from src.similarity_check.SimilarityCheck import *
+from src.synthetic_data_generation.generator import *
 
 if __name__ == "__main__":
 
