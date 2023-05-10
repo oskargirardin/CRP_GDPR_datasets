@@ -119,7 +119,7 @@ class Generator:
                 # Output log each 2O steps
                 logging_steps=20)
             model.fit(self.data, num_bootstrap=self.num_bootstrap)
-            synth_data = model.sample(n_samples=len(data))
+            synth_data = model.sample(n_samples= self.n_samples)
 
         return synth_data
 
