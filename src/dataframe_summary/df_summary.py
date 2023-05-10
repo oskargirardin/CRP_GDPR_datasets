@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Author: [Author Name]
-Date: [Date]
+Author: Lucrecerto
+Date: 10/5/2023
 
 Description:
 This module contains a function for generating a summary of a pandas dataframe. The function takes in a dataframe and a file name, and generates a summary dataframe with the following information:
