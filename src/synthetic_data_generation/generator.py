@@ -14,7 +14,7 @@ from realtabformer import REaLTabFormer
 class Generator:
 
     def __init__(self, data, architecture, n_samples, num_epochs=None, num_bootstrap=None, categorical_columns=None,
-                 sensitive_columns=None):
+                 sensitive_columns=None, verbose = True):
 
         """
         :param n_epochs: the number of epochs used for training, default is 200
@@ -24,6 +24,7 @@ class Generator:
         :param data: the data that should be trained on, should be in a pandas dataframe
         :param categorical_columns: a list with categorical columns
         :param sensitive_columns: a dict with sensitive columns and what  category they belong to
+        :param verbose: should the generate function print out the progress or not (only for CTGAN)
         The categories can be found in the faker_categorical function
         The metadata: an sdv metadata object required to call CTGAN and other methods
         Also required for similarity checks
@@ -49,6 +50,7 @@ class Generator:
         self.metadata = self.create_metadata()
         self.categorical_columns = categorical_columns
         self.sensitive_columns = sensitive_columns
+        self.verbose = verbose
 
     def create_metadata(self):
         metadata = SingleTableMetadata()
@@ -58,6 +60,7 @@ class Generator:
     def generate(self):
         """
         Based on the chosen architecture, this function returns synthetically generated data
+
         :return: synthetic data, a pandas dataframe
         """
 
@@ -65,7 +68,7 @@ class Generator:
         #  implementations of these, but I have not been able to import their library
 
         if self.architecture == "CTGAN":
-            model = CTGANSynthesizer(metadata=self.metadata, epochs=self.num_epochs, verbose=True)
+            model = CTGANSynthesizer(metadata=self.metadata, epochs=self.num_epochs, verbose=self.verbose)
             model.fit(self.data)
             synth_data = model.sample(self.n_samples)
 
