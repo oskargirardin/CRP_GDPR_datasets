@@ -1,3 +1,25 @@
+"""
+Date: [10/5/2023]
+
+Description:
+This module contains a class for generating synthetic data using different architectures. The class takes in a pandas dataframe and generates synthetic data based on the chosen architecture (CTGAN, GaussianCopula, or RealTabFormer). It also includes a method for generating Faker data for sensitive columns.
+
+Dependencies:
+- pandas
+- numpy
+- faker
+- random
+- collections
+- sdv
+- torch
+- re
+- realtabformer
+
+Usage:
+Instantiate the Generator class with the required arguments, including the data to be trained on, the chosen architecture, the number of samples to generate, and any categorical or sensitive columns. Call the generate() method to generate synthetic data based on the chosen architecture. Call the faker_categorical() method to generate Faker data for sensitive columns.
+
+"""
+
 import pandas as pd
 import numpy as np
 from faker import Faker
@@ -51,7 +73,20 @@ class Generator:
         self.categorical_columns = categorical_columns
         self.sensitive_columns = sensitive_columns
         self.verbose = verbose
+        
+        #TO FIGURE OUT
+        ''' 
+        if date_columns is not None:
+          self.date_columns = date_columns
 
+
+          for col in self.date_columns:
+            self.data[col+'_year'] = pd.to_datetime(self.data[col]).dt.year
+            self.data[col+'_month'] = pd.to_datetime(self.data[col]).dt.month
+            self.data[col+'_day'] = pd.to_datetime(self.data[col]).dt.day
+          
+          self.data = self.data.drop(self.date_columns, axis=1)
+        '''
     def create_metadata(self):
         metadata = SingleTableMetadata()
         metadata.detect_from_dataframe(data=self.data)
