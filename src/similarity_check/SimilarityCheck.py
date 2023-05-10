@@ -1,3 +1,23 @@
+"""
+File Name: similarity_check.py
+Author: oskargirardin
+Date: 10/5/2023
+
+Description:
+This module contains a class for comparing the quality of real and synthetic data. The class includes methods for comparing the columns, visualizing the columns, comparing the correlation matrices, and comparing the performance of machine learning models on the real and synthetic data.
+
+Dependencies:
+- matplotlib
+- pandas
+- numpy
+- seaborn
+- sdv
+
+Usage:
+Instantiate the SimilarityCheck class with the real data, synthetic data, categorical columns, and metadata. Call the comparison_columns() method to get the KL divergence for numerical variables. Call the visual_comparison_columns() method to visualize the data in various ways. Call the compare_correlations() method to compare the correlation matrices of the real and synthetic data. Call the compare_model_performance() method to compare the performance of machine learning models on the real and synthetic data.
+"""
+
+
 from __future__ import annotations
 
 import matplotlib.pyplot as plt
