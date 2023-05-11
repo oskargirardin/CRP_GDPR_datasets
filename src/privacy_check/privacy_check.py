@@ -1,4 +1,3 @@
-# Import libraries
 from sdmetrics.reports.single_table import DiagnosticReport
 from IPython.display import display, Markdown
 from sklearn.preprocessing import StandardScaler
@@ -6,6 +5,7 @@ import scipy
 import pandas as pd
 import numpy as np
 import tqdm
+
 
 class PrivacyCheck(DiagnosticReport):
     """
@@ -76,7 +76,7 @@ class PrivacyCheck(DiagnosticReport):
         Get the privacy score that was computed previously.
         """
         if verbose:
-            print("############ SCORE ############")
+            print("#################### SCORE #####################")
             print(f"Privacy score: {self.score*100: .2f}%")
             print(f"############ TOP {k} CLOSEST PAIRS ############")
             self._display_k_closest_pairs(k)
@@ -108,6 +108,41 @@ class PrivacyCheck(DiagnosticReport):
                 # If string: Checks if they're the same or not -> min = 0, max = 1
                 dist += int(arr1[idx] != arr2[idx])
         return dist/n if not only_cat else dist/(n-n_num_cols)
+    
+    def _dist_metric_num(arr1, arr2, only_cat = False):
+        """
+        Function that computes a distance between two arrays with data types dtypes
+
+        :param arr1: first array (pd.Series with column names)
+        :param arr2: second array (pd.Series with column names)
+        :param only_cat: boolean that indicates if we should only consider categorical columns to compute the distance
+
+        return: distance (float)
+        """
+        #assert len(arr1) == len(arr2), "Arrays not the same length"
+        
+        # Computes the area between the two points -> min = 0, max = 1
+        el_dist = abs(scipy.stats.norm.cdf(arr1)-scipy.stats.norm.cdf(arr2))
+
+        return np.sum(el_dist)
+    
+    def _dist_metric_cat(arr1, arr2, only_cat = False):
+        """
+        Function that computes a distance between two arrays with data types dtypes
+
+        :param arr1: first array (pd.Series with column names)
+        :param arr2: second array (pd.Series with column names)
+        :param only_cat: boolean that indicates if we should only consider categorical columns to compute the distance
+
+        return: distance (float)
+        """
+        #assert len(arr1) == len(arr2), "Arrays not the same length"
+        
+        # Computes the area between the two points -> min = 0, max = 1
+        identical_els = (arr1 == arr2)
+
+        return np.sum(identical_els)
+
 
 
     def _nn_privacy_score(self, only_cat = False, verbose = True):
@@ -122,18 +157,28 @@ class PrivacyCheck(DiagnosticReport):
         nneighbour_idx = []
         dists_nn = []
         n_samples = len(self.synthetic_data)
-        df_r, df_s = self.original_data.copy(), self.synthetic_data.copy()
+        df_real, df_synth = self.original_data.copy(), self.synthetic_data.copy()
+        # Separate dataframes into numerical and categorical
         dtypes = {col: col_type["type"] for col, col_type in self.metadata["fields"].items()}
         numeric_cols = [col for col, type in dtypes.items() if type == "numerical"]
-        scaler = StandardScaler()
+        cat_cols = [col for col, type in dtypes.items() if type != "numerical"]
+        df_real_num = df_real[numeric_cols]
+        df_synth_num = df_synth[numeric_cols]
+        df_real_cat = df_real[cat_cols]
+        df_synth_cat = df_synth[cat_cols]
         # Normalize numeric columns -> equal weights to each col
-        df_r[numeric_cols] = scaler.fit_transform(df_r[numeric_cols])
-        df_s[numeric_cols] = scaler.transform(df_s[numeric_cols])
+        scaler = StandardScaler()
+        df_real_num = pd.DataFrame(scaler.fit_transform(df_real_num))
+        df_synth_num = pd.DataFrame(scaler.transform(df_synth_num))
         # Loop over rows in synthetic dataset
-        for idx_synth in tqdm.tqdm(range(n_samples), desc='Computing privacy score', disable=(not verbose)):
-            row = df_s.iloc[idx_synth]
+        for idx_synth, row in tqdm.tqdm(range(n_samples), desc='Computing privacy score', disable=(not verbose)):
+            # Get numerical elements and categorical elements
+            row_num = df_synth_num.iloc[idx_synth]
+            row_cat = df_synth_cat.iloc[idx_synth]
             # Compute distance to every real row
-            dists = df_r.apply(lambda x: PrivacyCheck._dist_metric(row, x, dtypes, only_cat), axis = 1)
+            dists_num = df_real_num.apply(lambda x: PrivacyCheck._dist_metric_num(row_num, x, only_cat), axis = 1)
+            dists_cat = df_real_cat.apply(lambda x: PrivacyCheck._dist_metric_cat(row_cat, x, only_cat), axis = 1)
+            dists = dists_num + dists_cat
             # Find minimal distance and append neighbour index
             min_dist = dists.min()
             dists_nn.append(min_dist)
