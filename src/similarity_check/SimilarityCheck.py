@@ -26,9 +26,6 @@ import numpy as np
 import seaborn as sns
 from sdv.evaluation.single_table import evaluate_quality
 
-# TODO: ML model performance
-
-
 class SimilarityCheck:
 
     '''
