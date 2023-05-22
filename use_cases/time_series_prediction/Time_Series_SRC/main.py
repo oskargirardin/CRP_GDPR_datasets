@@ -1,6 +1,6 @@
 from sdv.datasets.local import load_csvs
-from Time_Series_SRC.data_processing import DataProcessor
-from Time_Series_SRC.ts_generator import TSGenerator
+from data_processing import DataProcessor
+from ts_generator import TSGenerator
 
 if __name__ == "__main__":
     datasets = load_csvs(folder_name='../data/')
