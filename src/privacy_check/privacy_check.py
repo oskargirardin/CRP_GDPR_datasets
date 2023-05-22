@@ -158,6 +158,7 @@ class PrivacyCheck(DiagnosticReport):
         dists_nn = []
         n_samples = len(self.synthetic_data)
         df_real, df_synth = self.original_data.copy(), self.synthetic_data.copy()
+
         # Separate dataframes into numerical and categorical
         dtypes = {col: col_type["type"] for col, col_type in self.metadata["fields"].items()}
         numeric_cols = [col for col, type in dtypes.items() if type == "numerical"]
@@ -166,6 +167,7 @@ class PrivacyCheck(DiagnosticReport):
         df_synth_num = df_synth[numeric_cols]
         df_real_cat = df_real[cat_cols]
         df_synth_cat = df_synth[cat_cols]
+        
         # Normalize numeric columns -> equal weights to each col
         scaler = StandardScaler()
         df_real_num = pd.DataFrame(scaler.fit_transform(df_real_num))
