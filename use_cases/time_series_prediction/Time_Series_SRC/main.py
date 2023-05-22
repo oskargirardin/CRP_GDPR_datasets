@@ -10,7 +10,9 @@ if __name__ == "__main__":
     # the name of the time column is time in this df and all columns can be used as identifiers in long format
     data_processor.convert_to_long_format(time_columns='time', verbose=True)
     data_processor.get_metadata_long_df(identifier='variable', time_column='time', datetime_format='%Y-%m-%d %H:%M:%S')
-    print(data_processor.metadata)
+    #print(data_processor.metadata)
 
-    generator = TSGenerator(data_processor.df_long, data_processor.metadata, verbose=True, n_epochs=10, n_samples=1)
+    generator = TSGenerator(data_processor.df_long, data_processor.metadata, verbose=True, n_epochs=2, n_samples=1)
     synthetic_df = generator.generate()
+
+    print(synthetic_df.head())
