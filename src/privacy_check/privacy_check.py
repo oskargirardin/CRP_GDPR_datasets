@@ -160,7 +160,7 @@ class PrivacyCheck(DiagnosticReport):
         df_real, df_synth = self.original_data.copy(), self.synthetic_data.copy()
 
         # Separate dataframes into numerical and categorical
-        dtypes = {col: col_type["type"] for col, col_type in self.metadata["fields"].items()}
+        dtypes = {col: col_type["sdtype"] for col, col_type in self.metadata["columns"].items()}
         numeric_cols = [col for col, type in dtypes.items() if type == "numerical"]
         cat_cols = [col for col, type in dtypes.items() if type != "numerical"]
         df_real_num = df_real[numeric_cols]
@@ -173,7 +173,7 @@ class PrivacyCheck(DiagnosticReport):
         df_real_num = pd.DataFrame(scaler.fit_transform(df_real_num))
         df_synth_num = pd.DataFrame(scaler.transform(df_synth_num))
         # Loop over rows in synthetic dataset
-        for idx_synth, row in tqdm.tqdm(range(n_samples), desc='Computing privacy score', disable=(not verbose)):
+        for idx_synth in tqdm.tqdm(range(n_samples), desc='Computing privacy score', disable=(not verbose)):
             # Get numerical elements and categorical elements
             row_num = df_synth_num.iloc[idx_synth]
             row_cat = df_synth_cat.iloc[idx_synth]
@@ -205,4 +205,7 @@ class PrivacyCheck(DiagnosticReport):
             df = pd.concat([self.synthetic_data.iloc[idx_synth], self.original_data.iloc[idx_neighbour]], axis = 1)
             df.columns = [f"Synthetic obs. (idx: {idx_synth})", f"Closest real obs. (idx: {idx_neighbour})"]
             print(f"{i+1}. Closest pair with distance: {dist: .4f}")
-            display(Markdown(df.to_markdown()))
+            try:
+                display(Markdown(df.to_markdown()))
+            except ImportError:
+                print(df.head(k))
