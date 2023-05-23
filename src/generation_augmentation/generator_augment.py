@@ -55,16 +55,19 @@ def generator_augmentation(data,architecture,n_samples_nofraud,p_fraud, n_epochs
         dataset that has been synthetized and augmented.
 
     '''
+    # extracting the categorical columns of the dataset
     categorical_columns = []
 
     for col in list(data):
         if data[col].dtypes == 'object':
             categorical_columns.append(col)
     
+    #minority class subset
     fraud_data = data[data[target_col] ==1]
+    #majority class subset
     nofraud_data = data[data[target_col] ==0]
     
-    
+    #Computing the desired size of the minority class for augmentation
     n_samples_fraud = round(n_samples_nofraud*p_fraud)
     
     nofraud_generator = Generator(num_epochs=n_epochs_nofraud,
@@ -83,10 +86,12 @@ def generator_augmentation(data,architecture,n_samples_nofraud,p_fraud, n_epochs
                                   categorical_columns=categorical_columns,
                                   sensitive_columns=sensitive_columns)
     
+    #generating the non fraudulent data
     synth_nofraud = nofraud_generator.generate()
+    #generating the fraudulent data
     synth_fraud = fraud_generator.generate()
     
-    
+    #Merging the two datasets and shuffling them
     synth = pd.concat([synth_nofraud,synth_fraud],ignore_index=True, axis = 0)
     synth = synth.sample(frac=1).reset_index(drop=True)
     
