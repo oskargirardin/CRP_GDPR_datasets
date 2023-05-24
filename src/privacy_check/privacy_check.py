@@ -92,7 +92,7 @@ class PrivacyCheck(DiagnosticReport):
                     df.drop(col, axis = 1, inplace = True)
 
 
-    def find_nearest_neighbours(self, sensitve_columns = None, verbose = True):
+    def find_nearest_neighbours(self, sensitive_columns = None, verbose = True):
         """
         Function that finds the nearest neighbours of every synthetic row. Rows with NA values have a distance of NA as well.
 
@@ -116,8 +116,8 @@ class PrivacyCheck(DiagnosticReport):
         df_real_num = pd.DataFrame(scaler.fit_transform(df_real_num), columns=numeric_cols)
         df_synth_num = pd.DataFrame(scaler.transform(df_synth_num), columns=numeric_cols)
         
-        if not sensitve_columns is None:
-            self._filter_columns(sensitve_columns, df_real_num, df_real_cat, df_synth_num, df_synth_cat)
+        if not sensitive_columns is None:
+            self._filter_columns(sensitive_columns, df_real_num, df_real_cat, df_synth_num, df_synth_cat)
 
 
         # For every synthetic row, find its nearest neighbour
