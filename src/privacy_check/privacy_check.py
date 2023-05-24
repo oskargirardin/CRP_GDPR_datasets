@@ -3,7 +3,7 @@ from sklearn.preprocessing import StandardScaler
 import pandas as pd
 import numpy as np
 import tqdm
-
+from sdv.metadata import SingleTableMetadata
 
 class PrivacyCheck(DiagnosticReport):
     """
@@ -67,7 +67,13 @@ class PrivacyCheck(DiagnosticReport):
 
         return: numerical columns (list), categorical columns (list)
         """
-        dtypes = {col: col_type["type"] for col, col_type in self.metadata["fields"].items()}
+       
+        if isinstance(self.metadata, SingleTableMetadata):
+            metadata = self.metadata.to_dict()
+            dtypes = {col: col_type["sdtype"] for col, col_type in metadata["columns"].items()}
+        else:
+            metadata = self.metadata
+            dtypes = {col: col_type["type"] for col, col_type in metadata["fields"].items()}
         numeric_cols = [col for col, type in dtypes.items() if type == "numerical"]
         cat_cols = [col for col, type in dtypes.items() if type != "numerical"]
         return numeric_cols, cat_cols
@@ -111,9 +117,8 @@ class PrivacyCheck(DiagnosticReport):
         df_synth_num = pd.DataFrame(scaler.transform(df_synth_num), columns=numeric_cols)
         
         if not sensitve_columns is None:
-            self._filter_sensitive_columns(sensitve_columns, df_real_num, df_real_cat, df_synth_num, df_synth_cat)
+            self._filter_columns(sensitve_columns, df_real_num, df_real_cat, df_synth_num, df_synth_cat)
 
-        #df_real_num, df_real_cat, df_synth_num, df_synth_cat = df_real_num, df_real_cat, df_synth_num, df_synth_cat
 
         # For every synthetic row, find its nearest neighbour
         for idx_synth in tqdm.tqdm(range(n_samples), desc='Finding nearest neighbours', disable=(not verbose)):
