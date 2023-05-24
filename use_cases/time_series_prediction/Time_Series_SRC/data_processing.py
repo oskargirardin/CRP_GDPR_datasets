@@ -93,7 +93,7 @@ class DataProcessor():
         if datetime_format:
             # If a datetime format is specified, convert the time column into datetime
             # If it is not specified, it should be a numeric
-            self.df_long[time_column] = pd.to_datetime(self.df_long[time_column], utc=True)
+            self.df_long[time_column] = pd.to_datetime(self.df_long[time_column], utc=True).dt.tz_localize(None)
 
         metadata.detect_from_dataframe(self.df_long)
         metadata.update_column(
