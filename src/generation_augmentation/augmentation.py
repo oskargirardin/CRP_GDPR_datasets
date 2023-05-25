@@ -7,7 +7,6 @@ Created on Mon May 22 14:59 2023
 
 import pandas as pd
 import numpy as np
-from faker import Faker
 import random
 from collections import OrderedDict
 from sdv.metadata import SingleTableMetadata
