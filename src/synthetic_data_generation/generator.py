@@ -116,7 +116,7 @@ class Generator:
                 model_type="tabular",
                 epochs=self.num_epochs,
                 gradient_accumulation_steps=4,
-                numeric_max_len = 11
+                numeric_max_len = 11,
                 # Output log each 2O steps
                 logging_steps=20)
             model.fit(self.data, num_bootstrap=self.num_bootstrap)
