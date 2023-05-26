@@ -23,7 +23,9 @@ from generator import Generator
 
 
 
-def generator_augmentation(data,architecture,n_samples_nofraud,p_fraud, n_epochs_nofraud, n_epochs_fraud,n_boostrap, sensitive_columns, target_col):
+def generator_augmentation(data, architecture, n_samples_nofraud, p_fraud, 
+                           n_epochs_nofraud, n_epochs_fraud, n_boostrap, 
+                           target_col, sensitive_columns = None):
     '''
 
     Parameters
@@ -68,7 +70,7 @@ def generator_augmentation(data,architecture,n_samples_nofraud,p_fraud, n_epochs
     nofraud_data = data[data[target_col] ==0]
     
     #Computing the desired size of the minority class for augmentation
-    n_samples_fraud = round(n_samples_nofraud*p_fraud)
+    n_samples_fraud = round(n_samples_nofraud*(p_fraud/(1 - p_fraud)))
     
     nofraud_generator = Generator(num_epochs=n_epochs_nofraud,
                                   n_samples=n_samples_nofraud,

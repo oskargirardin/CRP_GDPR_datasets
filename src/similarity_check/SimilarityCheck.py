@@ -86,13 +86,22 @@ class SimilarityCheck:
             ax[i].legend()
         plt.show()
 
-    def compare_correlations(self):
+    def compare_correlations(self, features = None):
         '''
         Compare correlation matrices
+        :param features: a list of features (columns) for which to compute the correlation matrix
         :return:
         '''
-        fig, ax = plt.subplots(figsize=(len(self.real_data.columns), (len(self.real_data.columns))))
-        diff_corr = abs(self.real_data.corr() - self.synthetic_data.corr())
+        if features is None:
+
+            fig, ax = plt.subplots(figsize=(len(self.real_data.columns), (len(self.real_data.columns))))
+            diff_corr = abs(self.real_data.corr() - self.synthetic_data.corr())
+
+        else:
+        
+            fig, ax = plt.subplots(figsize=(len(features), (len(features))))
+            diff_corr = abs(self.real_data[features].corr() - self.synthetic_data[features].corr())
+            
         mask = np.tril(np.ones_like(diff_corr, dtype=bool))
         sns.heatmap(diff_corr, mask=mask)
         ax.set_title('Differences in correlation values real and synthetic data')
