@@ -7,6 +7,7 @@ Created on Mon May 22 14:59 2023
 
 import pandas as pd
 import numpy as np
+from faker import Faker
 import random
 from collections import OrderedDict
 from sdv.metadata import SingleTableMetadata
@@ -53,12 +54,11 @@ def augmentation(data, target_col, architecture, p_fraud,
             categorical_columns.append(col)
     
     fraud_data = data[data[target_col] == 1]
-    n_nofraud_data = len(data[data[target_col] == 0])
     
-    
-    n_samples_fraud = round(n_nofraud_data*p_fraud)
-    print(f"------Number of samples generated:{n_samples_fraud}------")
 
+    #this line computes the number of samples to generate to have the desired class probability
+    n_samples_fraud = round(len(data)*(p_fraud)/(1-p_fraud) - len(fraud_data))
+    
     # creating the data generator for fraud
     fraud_generator = Generator(num_epochs = n_epochs,
                                   n_samples = n_samples_fraud,
@@ -71,7 +71,7 @@ def augmentation(data, target_col, architecture, p_fraud,
 
     # generating the samples for the fraud data
     synth_fraud = fraud_generator.generate()
-    print("------Fraud samples generated!------")
+
     
     # stick the new fraud data to the original data (and shuffle the data): dataset is augmented!
     augmented = pd.concat([data,synth_fraud],ignore_index=True, axis = 0)
