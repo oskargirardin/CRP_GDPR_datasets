@@ -157,7 +157,7 @@ class PrivacyCheck(DiagnosticReport):
             df = pd.concat([self.synthetic_data.iloc[idx_synth], self.original_data.iloc[idx_neighbour], ], axis = 1)
             df.columns = [f"Synthetic obs. (idx: {idx_synth})", f"Closest real obs. (idx: {idx_neighbour})"]
             print(f"{i+1}. Closest pair with distance: {dist: .4f}")
-            print(df)
+            return df
 
     
     def delete_closest_synthetic_columns(self, k):
