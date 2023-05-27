@@ -158,6 +158,4 @@ This project contains a Python script main.py that generates synthetic data usin
   - Change the list of sensitive columns (sensitive_cols)
 * Run main.py using python main.py.
 
-The generated synthetic data will be outputted to the console and stored in a CSV file named synth_data.csv if you uncomment #df.to_csv('synth_data.csv'). The similarity between the original and generated data will also be evaluated and printed to the console. 
-
-
+The generated synthetic data will be outputted to the console and stored in a CSV file named synth_data.csv if you uncomment #df.to_csv('synth_data.csv'). The similarity between the original and generated data will also be evaluated and printed to the console.
