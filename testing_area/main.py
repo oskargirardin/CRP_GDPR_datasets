@@ -48,33 +48,8 @@ if __name__ == "__main__":
     print(similarity_checker.comparison_columns())
     similarity_checker.visual_comparison_columns()
 
-    my_metadata = {
-        'fields':
-            {
-                'Income': {'type': 'numerical', 'subtype': 'integer'},
-                'Age': {'type': 'numerical', 'subtype': 'integer'},
-                'Experience': {'type': 'numerical', 'subtype': 'integer'},
-                'CURRENT_JOB_YRS': {'type': 'numerical', 'subtype': 'integer'},
-                'CURRENT_HOUSE_YRS': {'type': 'numerical', 'subtype': 'integer'},
-                'Married/Single': {'type': 'categorical'},
-                'House_Ownership': {'type': 'categorical'},
-                'Car_Ownership': {'type': 'categorical'},
-                'Profession': {'type': 'categorical'},
-                'CITY': {'type': 'categorical'},
-                'STATE': {'type': 'categorical'},
-                'Risk_Flag': {'type': 'boolean'}
-            },
-        'constraints': [],
-        'model_kwargs': {},
-        'name': None,
-        'primary_key': None,
-        'sequence_index': None,
-        'entity_columns': [],
-        'context_columns': []
-    }
-    print(generator.metadata)
 
     print('Computing the privacy score')
-    privacy_check = PrivacyCheck(generator.data, synth_data, generator.metadata.to_dict(), dist_threshold = 0.1)
-    privacy_check.generate_privacy_score()
-    print(privacy_check.get_privacy_score(k = 10))
+    privacy_check = PrivacyCheck(generator.data, synth_data, generator.metadata, dist_threshold = 0.1)
+    privacy_check.find_nearest_neighbours()
+    print(privacy_check.display_closest_pairs(10))
