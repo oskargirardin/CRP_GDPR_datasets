@@ -139,31 +139,12 @@ class PrivacyCheck(DiagnosticReport):
 
         return neighbour_pairs
 
-    def display_closest_pairs(self, k):
+    def get_closest_pairs(self, k, display = False):
         """
-        Displays the content of the k closest pairs
+        Get the indeces of the k closest pairs and display if needed.
 
-        :param k (int): number of closest pairs to display 
-        """
-        assert k > 0, "k must be larger than 0"
-        try:
-            pairs_sorted = sorted(self.pairs, key = lambda x: x[2])
-        except AttributeError:
-            raise Exception("self.pairs is not defined, please run function find_nearest_neighbours first.")
-        k_closest_pairs = pairs_sorted[:k]
-        print(f"############ TOP {k} CLOSEST PAIRS ############")
-        for i in range(k):
-            idx_synth, idx_neighbour, dist = k_closest_pairs[i]
-            df = pd.concat([self.synthetic_data.iloc[idx_synth], self.original_data.iloc[idx_neighbour], ], axis = 1)
-            df.columns = [f"Synthetic obs. (idx: {idx_synth})", f"Closest real obs. (idx: {idx_neighbour})"]
-            print(f"{i+1}. Closest pair with distance: {dist: .4f}")
-            print(df)
-
-    def get_closest_pairs_indeces(self, k):
-        """
-        Get the k closest pairs' indeces
-
-        :param k (int): number of closest pairs
+        :param k (int): number of closest pairs to get
+        :param display (bool): print the content of the closest pairs?
 
         returns: A dataframe of the indeces of the closest pairs
         """
@@ -174,7 +155,18 @@ class PrivacyCheck(DiagnosticReport):
             raise Exception("self.pairs is not defined, please run function find_nearest_neighbours first.")
         k_closest_pairs = pairs_sorted[:k]
         df_nn = pd.DataFrame(k_closest_pairs, columns = ["synthetic_idx", "real_idx", "distance"])
+
+        if display:
+            print(f"############ TOP {k} CLOSEST PAIRS ############")
+            for i in range(k):
+                idx_synth, idx_neighbour, dist = k_closest_pairs[i]
+                df = pd.concat([self.synthetic_data.iloc[idx_synth], self.original_data.iloc[idx_neighbour], ], axis = 1)
+                df.columns = [f"Synthetic obs. (idx: {idx_synth})", f"Closest real obs. (idx: {idx_neighbour})"]
+                print(f"{i+1}. Closest pair with distance: {dist: .4f}")
+                print(df)
+        
         return df_nn
+
     
     def delete_closest_synthetic_columns(self, k):
         pass
