@@ -69,7 +69,7 @@ class TSSimilarityCheck():
         return dist_matrix
 
 
-    def plot_nearest_neighbours(self, sequence_column = "variable", value_column = "value", time_column = "time"):
+    def plot_nearest_neighbours(self, sequence_column = "variable", value_column = "value", time_column = "time", **fig_kw):
         """
         Function that plots the nearest (synthetic) time series for every real time series.
 
@@ -86,7 +86,7 @@ class TSSimilarityCheck():
 
         # Init plotting
         n_plots = len(self.df_real[sequence_column].unique())
-        fig, axs = plt.subplots(nrows=math.ceil(n_plots/2), ncols=2, figsize=(20,30)) # TODO: account for odd number of plots by setting the last plot to ax.axis("off")
+        fig, axs = plt.subplots(nrows=math.ceil(n_plots/2), ncols=2, **fig_kw) 
         axs = axs.reshape(-1)
 
         for i, (real_col, synth_name) in enumerate(nearest_synth_ts.items()):
