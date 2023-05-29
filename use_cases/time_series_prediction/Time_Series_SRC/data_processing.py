@@ -117,3 +117,10 @@ class DataProcessor():
             print('The time column must be a numeric (0,...,n) or of the datetime format specified as parameter')
         self.metadata = metadata
 
+    def get_df_long(self):
+        return self.df_long
+    
+    def get_metadata(self):
+        if self.metadata is None:
+            print("Warning: self.metadata is None. Run get_metadata_long_df first.")
+        return self.metadata

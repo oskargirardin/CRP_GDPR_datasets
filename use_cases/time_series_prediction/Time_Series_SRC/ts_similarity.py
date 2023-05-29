@@ -69,9 +69,13 @@ class TSSimilarityCheck():
         return dist_matrix
 
 
-    def plot_nearest_neighbours(self):
+    def plot_nearest_neighbours(self, sequence_column = "variable", value_column = "value", time_column = "time"):
         """
         Function that plots the nearest (synthetic) time series for every real time series.
+
+        :param sequence_column: column that identifies different sequences
+        :param value_column: column that contains the values of the time series
+        :param time_column: column that identifies the time point
         """
         # Compute distance matrix
         if self.dist_matrix is None:
@@ -81,20 +85,26 @@ class TSSimilarityCheck():
         nearest_synth_ts = self.dist_matrix.idxmin(axis=0)
 
         # Init plotting
-        n_plots = len(self.df_real["energy_source"].unique())
+        n_plots = len(self.df_real[sequence_column].unique())
         fig, axs = plt.subplots(nrows=math.ceil(n_plots/2), ncols=2, figsize=(20,30)) # TODO: account for odd number of plots by setting the last plot to ax.axis("off")
         axs = axs.reshape(-1)
 
         for i, (real_col, synth_name) in enumerate(nearest_synth_ts.items()):
+
+            if pd.isna(synth_name):
+                axs[i].set_title(f"NaN: {real_col}")
+                axs[i].axis("off")
+                continue
+
             # Subset real dataset and extract y, x for plotting
-            real_df_subset = self.df_real[self.df_real["energy_source"] == real_col]
-            y_real = real_df_subset["value"]
-            x_real = real_df_subset["time"]
+            real_df_subset = self.df_real[self.df_real[sequence_column] == real_col]
+            y_real = real_df_subset[value_column]
+            x_real = real_df_subset[time_column]
 
             # Subset synthetic dataset and extract y, x for plotting
-            synth_df_subset = self.df_synth[self.df_synth["energy_source"] == synth_name]
-            y_synth = synth_df_subset["value"]
-            x_synth = synth_df_subset["time"]
+            synth_df_subset = self.df_synth[self.df_synth[sequence_column] == synth_name]
+            y_synth = synth_df_subset[value_column]
+            x_synth = synth_df_subset[time_column]
 
             axs[i].plot(x_real, y_real, label = f"Real ({real_col})")
             axs[i].plot(x_synth, y_synth, label = f"Synthetic ({synth_name})")
