@@ -64,6 +64,7 @@ class DataProcessor():
         """
         This function will convert the dataframe into long format if it is not yet the case
         It is similar to the pd.melt() functionality
+
         :param time_columns: which columns order the observations?
         :param desired_identifiers: a list of the columns you want to include as identifiers, and on which the model
         should be trained. If None, all columns will become an identifier in long format
@@ -85,6 +86,7 @@ class DataProcessor():
         """
         Obtains the metadata from the df_long, the metadata can be accessed through the metadata attribute,
         it is of type SingleTableMetadata, but can be converted into a dict by calling to_dict()
+
         :param identifier: the sequence identifier, the columns in wide format (in long format, the Variable column)
         :param time_column: orders the observations for each sequence, should be a numeric or a datetime format
         :param datetime_format: in what format is the date? For example '%Y-%m-%d %H:%M:%S'.

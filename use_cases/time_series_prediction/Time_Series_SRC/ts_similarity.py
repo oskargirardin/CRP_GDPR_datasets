@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import dtw
+import matplotlib.pyplot as plt
+import math
 
 class TSSimilarityCheck():
 
@@ -65,3 +67,41 @@ class TSSimilarityCheck():
                 dist_matrix.iloc[i, j] = dist
         self.dist_matrix = dist_matrix
         return dist_matrix
+
+
+    def plot_nearest_neighbours(self):
+        """
+        Function that plots the nearest (synthetic) time series for every real time series.
+        """
+        # Compute distance matrix
+        if self.dist_matrix is None:
+            self.compute_dtw_matrix()
+
+        # Find the nearest neighbour's names
+        nearest_synth_ts = self.dist_matrix.idxmin(axis=0)
+
+        # Init plotting
+        n_plots = len(self.df_real["energy_source"].unique())
+        fig, axs = plt.subplots(nrows=math.ceil(n_plots/2), ncols=2, figsize=(20,30)) # TODO: account for odd number of plots by setting the last plot to ax.axis("off")
+        axs = axs.reshape(-1)
+
+        for i, (real_col, synth_name) in enumerate(nearest_synth_ts.items()):
+            # Subset real dataset and extract y, x for plotting
+            real_df_subset = self.df_real[self.df_real["energy_source"] == real_col]
+            y_real = real_df_subset["value"]
+            x_real = real_df_subset["time"]
+
+            # Subset synthetic dataset and extract y, x for plotting
+            synth_df_subset = self.df_synth[self.df_synth["energy_source"] == synth_name]
+            y_synth = synth_df_subset["value"]
+            x_synth = synth_df_subset["time"]
+
+            axs[i].plot(x_real, y_real, label = f"Real ({real_col})")
+            axs[i].plot(x_synth, y_synth, label = f"Synthetic ({synth_name})")
+            axs[i].tick_params(axis='x', which='both', bottom=False,top=False,labelbottom=False)
+            axs[i].set_title(f"Nearest neighbour: {real_col} (DTW-distance: {self.dist_matrix[real_col][synth_name]: .2f})")
+            axs[i].legend()
+        
+        # If the number of plots is odd, make last plot empty
+        if n_plots % 2 == 1:
+            axs[-1].axis("off")
