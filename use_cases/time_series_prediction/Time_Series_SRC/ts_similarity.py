@@ -69,6 +69,29 @@ class TSSimilarityCheck():
         return dist_matrix
 
 
+    def get_mean_nn_distances(self):
+        # Compute distance matrix
+        if self.dist_matrix is None:
+            self.compute_dtw_matrix()
+
+        # Find the nearest neighbour's names
+        nearest_synth_ts = self.dist_matrix.idxmin(axis=0)
+
+        # Init distance_list
+        nn_distances = []
+
+        for real_col, synth_name in nearest_synth_ts.items():
+            # Skip NAs
+            if pd.isna(synth_name):
+                continue
+            # Get DTW distance of pair
+            nn_distance = self.dist_matrix[real_col][synth_name]
+            nn_distances.append(nn_distance)
+
+        return np.mean(nn_distances)
+
+
+
     def plot_nearest_neighbours(self, sequence_column = "variable", value_column = "value", time_column = "time", **fig_kw):
         """
         Function that plots the nearest (synthetic) time series for every real time series.
@@ -96,6 +119,9 @@ class TSSimilarityCheck():
                 axs[i].axis("off")
                 continue
 
+            # Get DTW distance of pair
+            nn_distance = self.dist_matrix[real_col][synth_name]
+
             # Subset real dataset and extract y, x for plotting
             real_df_subset = self.df_real[self.df_real[sequence_column] == real_col]
             y_real = real_df_subset[value_column]
@@ -109,7 +135,7 @@ class TSSimilarityCheck():
             axs[i].plot(x_real, y_real, label = f"Real ({real_col})")
             axs[i].plot(x_synth, y_synth, label = f"Synthetic ({synth_name})")
             axs[i].tick_params(axis='x', which='both', bottom=False,top=False,labelbottom=False)
-            axs[i].set_title(f"Nearest neighbour: {real_col} (DTW-distance: {self.dist_matrix[real_col][synth_name]: .2f})")
+            axs[i].set_title(f"Nearest neighbour: {real_col} (DTW-distance: {nn_distance: .2f})")
             axs[i].legend()
         
         # If the number of plots is odd, make last plot empty
