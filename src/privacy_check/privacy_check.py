@@ -106,6 +106,11 @@ class PrivacyCheck(DiagnosticReport):
         n_samples = len(self.synthetic_data)
         df_real, df_synth = self.original_data.copy(), self.synthetic_data.copy()
 
+        # TODO: if there is a nan value in the data, the distance becomes NaN and these are
+        # the closest (NaN < 0)
+        df_real.interpolate(inplace=True)
+        df_synth.interpolate(inplace=True)
+
         # Separate dataframes into numerical and categorical
         numeric_cols, cat_cols = self._get_column_types()
         df_real_num, df_real_cat = df_real[numeric_cols], df_real[cat_cols]
