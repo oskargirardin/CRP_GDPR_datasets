@@ -106,16 +106,26 @@ class PrivacyCheck(DiagnosticReport):
         n_samples = len(self.synthetic_data)
         df_real, df_synth = self.original_data.copy(), self.synthetic_data.copy()
 
-        # TODO: if there is a nan value in the data, the distance becomes NaN and these are
-        # the closest (NaN < 0)
-        df_real.interpolate(inplace=True)
-        df_synth.interpolate(inplace=True)
+        # if there is a nan value in the data, the distance becomes NaN and these are
+        # the closest (NaN < 0), we will therefore fill with nan values and the mode
 
         # Separate dataframes into numerical and categorical
         numeric_cols, cat_cols = self._get_column_types()
+
+        # We might have some nan values, which make the distance equal to NaN
+
         df_real_num, df_real_cat = df_real[numeric_cols], df_real[cat_cols]
+
+        real_means_num = df_real_num.mean()
+        real_modes_cat = df_real_cat.mode()
+
         df_synth_num, df_synth_cat = df_synth[numeric_cols], df_synth[cat_cols]
-        
+
+        df_real_num.fillna(real_means_num, inplace = True)
+        df_synth_num.fillna(real_means_num, inplace=True)
+        df_real_cat.fillna(real_modes_cat, inplace=True)
+        df_synth_cat.fillna(real_modes_cat, inplace=True)
+
         # Normalize numeric columns to give equal weights to each column
         scaler = StandardScaler()
         df_real_num = pd.DataFrame(scaler.fit_transform(df_real_num), columns=numeric_cols)
@@ -123,7 +133,6 @@ class PrivacyCheck(DiagnosticReport):
         
         if not sensitive_columns is None:
             self._filter_columns(sensitive_columns, df_real_num, df_real_cat, df_synth_num, df_synth_cat)
-
 
         # For every synthetic row, find its nearest neighbour
         for idx_synth in tqdm.tqdm(range(n_samples), desc='Finding nearest neighbours', disable=(not verbose)):
