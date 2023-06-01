@@ -130,6 +130,8 @@ class PrivacyCheck(DiagnosticReport):
             dists_num = np.sum(np.abs(df_real_num.to_numpy() - row_num), axis = 1)
             dists_cat = np.sum(df_real_cat.to_numpy() != row_cat, axis = 1)
             dists = (dists_num + dists_cat) / (len(numeric_cols) + len(cat_cols))
+            # Set nan values to infinity (ignoring them). This means that we ignore any row (real of not) that has nan values
+            dists = np.nan_to_num(dists, nan = float("inf"))
             # Find minimal distance and append neighbour index
             min_dist = np.min(dists)
             idx_neighbour = np.argmin(dists)
@@ -166,7 +168,3 @@ class PrivacyCheck(DiagnosticReport):
                 print(df)
         
         return df_nn
-
-    
-    def delete_closest_synthetic_columns(self, k):
-        pass
