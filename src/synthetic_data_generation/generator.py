@@ -99,7 +99,6 @@ class Generator:
         :return: synthetic data, a pandas dataframe
         """
 
-        #  TODO: Add more generators, especially PATEGAN or other differentially private ones synthcity seems to have
         #  implementations of these, but I have not been able to import their library
 
         if self.architecture == "CTGAN":
@@ -130,9 +129,6 @@ class Generator:
         WARNING: data generated here should not be used for ML models
         :param seed: int, random seed, defaults
         """
-
-        # TODO: Find a way to make this generalizable, f.e. create many attributes, and return the ones asked
-
         seed = seed or random.seed()
         # We can initialize the faker with multiple locations: can now draw addresses and names from
         # Germany, US, UK, Spain, France, Italy. Either just a list => all equal weights, or an ordered
