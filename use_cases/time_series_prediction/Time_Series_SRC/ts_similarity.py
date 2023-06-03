@@ -17,7 +17,7 @@ class TSSimilarityCheck():
         self.metadata = metadata
         self.dist_matrix = None
 
-    def compute_dtw_matrix(self):
+    def compute_distance_matrix(self):
         """
         Function that computes the DTW for every combination of original & synthetic sequences.
 
@@ -102,7 +102,7 @@ class TSSimilarityCheck():
         """
         # Compute distance matrix
         if self.dist_matrix is None:
-            self.compute_dtw_matrix()
+            self.compute_distance_matrix()
 
         # Find the nearest neighbour's names
         nearest_synth_ts = self.dist_matrix.idxmin(axis=0)

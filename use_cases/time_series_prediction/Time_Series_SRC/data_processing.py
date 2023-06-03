@@ -30,7 +30,7 @@ class DataProcessor():
     several sequences.
     """
 
-    def __init__(self, df, metadata = None,obs_limit = 1000, interpolate = True, drop_na_cols = True, long = False):
+    def __init__(self, df, metadata = None, obs_limit = 1000, interpolate = True, drop_na_cols = True, long = False):
         """
         :param df: the dataframe of time series
         :param metadata: the metadata in 'SingleTableMetadata' format from sdv
@@ -48,15 +48,14 @@ class DataProcessor():
             # taking a copy to avoid spillover modifications
             self.df_long = df.copy()
         else:
-            # If the dataframe is not in long format, subset it so that it contains at most obs_limit
+            # If the dataframe is in wide format, subset it so that it contains at most obs_limit
             # observations for each sequence
             self.df = df.iloc[:obs_limit]
-
-        # How should NaN values be treated? Interpolated or removed?
-        if interpolate:
-            self.df = self.df.interpolate()
-        elif drop_na_cols:
-            self.df = self.df.dropna(axis=1, how="all")
+            # How should NaN values be treated? Interpolated or removed?
+            if interpolate:
+                self.df = self.df.interpolate()
+            elif drop_na_cols:
+                self.df = self.df.dropna(axis=1, how="all")
 
         self.metadata = metadata
 
@@ -81,6 +80,8 @@ class DataProcessor():
 
         if verbose:
             print(self.df_long.head())
+        
+        return self.df_long
 
     def get_metadata_long_df(self, identifier, time_column, datetime_format=None):
         """
@@ -116,6 +117,8 @@ class DataProcessor():
             print('Could not set sequence index! Try again, PARSynthesizer will not work.')
             print('The time column must be a numeric (0,...,n) or of the datetime format specified as parameter')
         self.metadata = metadata
+
+        return metadata
 
     def get_df_long(self):
         return self.df_long
