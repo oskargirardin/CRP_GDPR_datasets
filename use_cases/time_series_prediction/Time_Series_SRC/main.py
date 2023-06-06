@@ -12,7 +12,9 @@ if __name__ == "__main__":
     data_processor.get_metadata_long_df(identifier='variable', time_column='time', datetime_format='%Y-%m-%d %H:%M:%S')
     #print(data_processor.metadata)
 
-    generator = TSGenerator(data_processor.df_long, data_processor.metadata, verbose=True, n_epochs=2, n_samples=1)
-    synthetic_df = generator.generate()
+    generator = TSGenerator(data_processor.df_long, data_processor.metadata, verbose=True)
+    generator.train(n_epochs=2)
+
+    synthetic_df = generator.sample(n_samples=1)
 
     print(synthetic_df.head())

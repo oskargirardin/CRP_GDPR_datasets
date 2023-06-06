@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import dtw
+import matplotlib.pyplot as plt
+import math
 
 class TSSimilarityCheck():
 
@@ -15,7 +17,7 @@ class TSSimilarityCheck():
         self.metadata = metadata
         self.dist_matrix = None
 
-    def compute_dtw_matrix(self):
+    def compute_distance_matrix(self):
         """
         Function that computes the DTW for every combination of original & synthetic sequences.
 
@@ -65,3 +67,77 @@ class TSSimilarityCheck():
                 dist_matrix.iloc[i, j] = dist
         self.dist_matrix = dist_matrix
         return dist_matrix
+
+
+    def get_mean_nn_distances(self):
+        # Compute distance matrix
+        if self.dist_matrix is None:
+            self.compute_dtw_matrix()
+
+        # Find the nearest neighbour's names
+        nearest_synth_ts = self.dist_matrix.idxmin(axis=0)
+
+        # Init distance_list
+        nn_distances = []
+
+        for real_col, synth_name in nearest_synth_ts.items():
+            # Skip NAs
+            if pd.isna(synth_name):
+                continue
+            # Get DTW distance of pair
+            nn_distance = self.dist_matrix[real_col][synth_name]
+            nn_distances.append(nn_distance)
+
+        return np.mean(nn_distances)
+
+
+
+    def plot_nearest_neighbours(self, sequence_column = "variable", value_column = "value", time_column = "time", **fig_kw):
+        """
+        Function that plots the nearest (synthetic) time series for every real time series.
+
+        :param sequence_column: column that identifies different sequences
+        :param value_column: column that contains the values of the time series
+        :param time_column: column that identifies the time point
+        """
+        # Compute distance matrix
+        if self.dist_matrix is None:
+            self.compute_distance_matrix()
+
+        # Find the nearest neighbour's names
+        nearest_synth_ts = self.dist_matrix.idxmin(axis=0)
+
+        # Init plotting
+        n_plots = len(self.df_real[sequence_column].unique())
+        fig, axs = plt.subplots(nrows=math.ceil(n_plots/2), ncols=2, **fig_kw) 
+        axs = axs.reshape(-1)
+
+        for i, (real_col, synth_name) in enumerate(nearest_synth_ts.items()):
+
+            if pd.isna(synth_name):
+                axs[i].set_title(f"NaN: {real_col}")
+                axs[i].axis("off")
+                continue
+
+            # Get DTW distance of pair
+            nn_distance = self.dist_matrix[real_col][synth_name]
+
+            # Subset real dataset and extract y, x for plotting
+            real_df_subset = self.df_real[self.df_real[sequence_column] == real_col]
+            y_real = real_df_subset[value_column]
+            x_real = real_df_subset[time_column]
+
+            # Subset synthetic dataset and extract y, x for plotting
+            synth_df_subset = self.df_synth[self.df_synth[sequence_column] == synth_name]
+            y_synth = synth_df_subset[value_column]
+            x_synth = synth_df_subset[time_column]
+
+            axs[i].plot(x_real, y_real, label = f"Real ({real_col})")
+            axs[i].plot(x_synth, y_synth, label = f"Synthetic ({synth_name})")
+            axs[i].tick_params(axis='x', which='both', bottom=False,top=False,labelbottom=False)
+            axs[i].set_title(f"Nearest neighbour: {real_col} (DTW-distance: {nn_distance: .2f})")
+            axs[i].legend()
+        
+        # If the number of plots is odd, make last plot empty
+        if n_plots % 2 == 1:
+            axs[-1].axis("off")

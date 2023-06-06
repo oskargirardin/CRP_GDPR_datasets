@@ -30,7 +30,7 @@ class DataProcessor():
     several sequences.
     """
 
-    def __init__(self, df, metadata = None,obs_limit = 1000, interpolate = True, drop_na_cols = True, long = False):
+    def __init__(self, df, metadata = None, obs_limit = 1000, interpolate = True, drop_na_cols = True, long = False):
         """
         :param df: the dataframe of time series
         :param metadata: the metadata in 'SingleTableMetadata' format from sdv
@@ -48,15 +48,14 @@ class DataProcessor():
             # taking a copy to avoid spillover modifications
             self.df_long = df.copy()
         else:
-            # If the dataframe is not in long format, subset it so that it contains at most obs_limit
+            # If the dataframe is in wide format, subset it so that it contains at most obs_limit
             # observations for each sequence
             self.df = df.iloc[:obs_limit]
-
-        # How should NaN values be treated? Interpolated or removed?
-        if interpolate:
-            self.df = self.df.interpolate()
-        elif drop_na_cols:
-            self.df = self.df.dropna(axis=1, how="all")
+            # How should NaN values be treated? Interpolated or removed?
+            if interpolate:
+                self.df = self.df.interpolate()
+            elif drop_na_cols:
+                self.df = self.df.dropna(axis=1, how="all")
 
         self.metadata = metadata
 
@@ -64,6 +63,7 @@ class DataProcessor():
         """
         This function will convert the dataframe into long format if it is not yet the case
         It is similar to the pd.melt() functionality
+
         :param time_columns: which columns order the observations?
         :param desired_identifiers: a list of the columns you want to include as identifiers, and on which the model
         should be trained. If None, all columns will become an identifier in long format
@@ -80,11 +80,14 @@ class DataProcessor():
 
         if verbose:
             print(self.df_long.head())
+        
+        return self.df_long
 
     def get_metadata_long_df(self, identifier, time_column, datetime_format=None):
         """
         Obtains the metadata from the df_long, the metadata can be accessed through the metadata attribute,
         it is of type SingleTableMetadata, but can be converted into a dict by calling to_dict()
+
         :param identifier: the sequence identifier, the columns in wide format (in long format, the Variable column)
         :param time_column: orders the observations for each sequence, should be a numeric or a datetime format
         :param datetime_format: in what format is the date? For example '%Y-%m-%d %H:%M:%S'.
@@ -115,3 +118,12 @@ class DataProcessor():
             print('The time column must be a numeric (0,...,n) or of the datetime format specified as parameter')
         self.metadata = metadata
 
+        return metadata
+
+    def get_df_long(self):
+        return self.df_long
+    
+    def get_metadata(self):
+        if self.metadata is None:
+            print("Warning: self.metadata is None. Run get_metadata_long_df first.")
+        return self.metadata

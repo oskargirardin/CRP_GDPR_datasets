@@ -8,7 +8,7 @@ class TSGenerator:
     Methods currently available are 'PARSynthesizer'
     """
 
-    def __init__(self, df, metadata, method='PAR', n_epochs=10, n_samples=10, verbose=False, cuda=False):
+    def __init__(self, df, metadata, method='PAR', verbose=False, cuda=False):
         """
         :param df: the dataframe, for ParSynthesizer it should be in Long Format, see DataProcessor
         :param metadata: metadata for the df to train on
@@ -20,22 +20,27 @@ class TSGenerator:
         """
         self.df = df
         self.metadata = metadata
-        self.n_epochs = n_epochs
         self.method = method
-        self.n_samples = n_samples
         self.verbose = verbose
         self.cuda = torch.cuda.is_available()
         self.synthetic_df = None
+        self.model = None
 
-    def generate(self):
+
+    def train(self, n_epochs = 100):
+        if self.method == 'PAR':
+            synthesizer = PARSynthesizer(self.metadata, verbose=self.verbose, cuda=self.cuda, epochs=n_epochs)
+            synthesizer.fit(self.df)
+            self.model = synthesizer
+        else:
+            print('The requested method has not been implemented')
+
+    def sample(self, n_samples = 10, sequence_length = None):
         """
         Fits the synthesizer and samples synthetic data
         :return: returns the synthetic data in a dataframe that follows the metadata parameter
         """
-        if self.method == 'PAR':
-            synthesizer = PARSynthesizer(self.metadata, verbose=self.verbose, cuda=self.cuda, epochs=self.n_epochs)
-            synthesizer.fit(self.df)
-            self.synthetic_df = synthesizer.sample(num_sequences=self.n_samples)
-            return self.synthetic_df
-        else:
-            print('The requested method has not been implemented')
+        
+        self.synthetic_df = self.model.sample(num_sequences=n_samples, sequence_length = sequence_length)
+        return self.synthetic_df
+        
