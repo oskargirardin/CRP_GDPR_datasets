@@ -74,19 +74,7 @@ class Generator:
         self.sensitive_columns = sensitive_columns
         self.verbose = verbose
         
-        #TO FIGURE OUT
-        ''' 
-        if date_columns is not None:
-          self.date_columns = date_columns
-
-
-          for col in self.date_columns:
-            self.data[col+'_year'] = pd.to_datetime(self.data[col]).dt.year
-            self.data[col+'_month'] = pd.to_datetime(self.data[col]).dt.month
-            self.data[col+'_day'] = pd.to_datetime(self.data[col]).dt.day
-          
-          self.data = self.data.drop(self.date_columns, axis=1)
-        '''
+        
     def create_metadata(self):
         metadata = SingleTableMetadata()
         metadata.detect_from_dataframe(data=self.data)
