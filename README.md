@@ -1,6 +1,14 @@
 # CRP_GDPR_datasets
 
-To install the packages required with this library, the python version should not be above 3.10
+**IMPORTANT: To install the packages required with this library, the python version should not be above 3.10!**
+
+This repository contains the functionality to create synthetic tabular and time series data. To use it, clone the repository locally, 
+and install the desired requirements file: pip install -r SingleTableRequirements.txt or pip install -r TsRequirements.txt
+
+Afterwards, the UserGuides folder contains a guide on how to use the library contained in the src folder for both time series and tabular data generation. 
+The main.py files in the SingleTableGeneration and TimeSeriesGeneration show a brief version of the workflow. 
+
+The data folder contains data used in the userguide and main.py files.
 
 ## Structure of the library
 
@@ -137,11 +145,46 @@ This project contains a Python script main.py that generates synthetic data usin
 #### Usage
 
 * Clone this repository to your local machine.
-* Install the required libraries using pip install -r requirements.txt.
-* Modify the parameters passed to the Generator class in main.py
-  - Change the path to your csv (path_test_data)
-  - Change the list of categorical columns (cat_cols)
-  - Change the list of sensitive columns (sensitive_cols)
-* Run main.py using python main.py.
+* Install the required libraries using pip install -r SingleTableRequirements.txt
+* Run main.py using python main.py, do this either from the SingleTableGeneration 
 
-The generated synthetic data will be outputted to the console and stored in a CSV file named synth_data.csv if you uncomment #df.to_csv('synth_data.csv'). The similarity between the original and generated data will also be evaluated and printed to the console.
+
+### Time Series Generation
+
+#### DataProcessor
+
+For the PARSynthesizer that we use, the data has to be in 'long' format. The DataProcessor contains all the necessary methods to easily do this. 
+
+    data_processor = DataProcessor(df, metadata = None, obs_limit = 1000, interpolate = True, drop_na_cols = True, long = False)
+
+
+Attributes: 
+* df: the data to process
+* metadata: the metadata of the data to process
+* obs_limit: the number of rows to use (last k observations for the time series)
+* interpolate: whether to interpolate nan values
+* drop_na_cols: whether to drop nan columns
+
+    
+Methods: 
+
+**1. convert_to_long_format(time_columns, desired_identifiers, verbose)** 
+
+    data_processor.convert_to_long_format(time_columns, desired_identifiers=None, verbose = False)
+
+
+Attributes: 
+* time_columns: which columns order the observations?
+* desired_identifiers: a list of the columns you want to include as identifiers, and on which the model
+      should be trained. If None, all columns will become an identifier in long format
+* verbose: if True, print the dataframe
+
+**2. get_metadata_long_df(self, identifier, time_column, datetime_format=None)** 
+
+    data_processor.get_metadata_long_df(identifier, time_column, datetime_format=None)
+
+Attributes: 
+* identifier: the sequence identifier, the columns in wide format (in long format, the Variable column)
+* time_column: orders the observations for each sequence, should be a numeric or a datetime format
+* datetime_format: in what format is the date? For example '%Y-%m-%d %H:%M:%S'.
+
