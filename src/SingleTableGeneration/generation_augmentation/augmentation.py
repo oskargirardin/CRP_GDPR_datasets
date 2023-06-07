@@ -17,7 +17,7 @@ import re
 from sdv.metadata import SingleTableMetadata
 from realtabformer import REaLTabFormer
 
-from synthetic_data_generation.generator import Generator
+from SingleTableGeneration.synthetic_data_generation.generator import Generator
 
 def augmentation(data, target_col, architecture, p_fraud,  
                            n_epochs, n_boostrap = 500):

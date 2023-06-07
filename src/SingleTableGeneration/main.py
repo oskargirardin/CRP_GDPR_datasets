@@ -5,11 +5,11 @@ comparing it with the original and generating a privacy score.
 
 import sys
 import os
-sys.path.append('..')
 import pandas as pd
 import numpy as np
 from faker import Faker
 import re
+sys.path.append('..')
 from similarity_check.SimilarityCheck import *
 from synthetic_data_generation.generator import *
 from privacy_check.privacy_check import *

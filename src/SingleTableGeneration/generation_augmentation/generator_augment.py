@@ -18,7 +18,7 @@ import re
 from sdv.metadata import SingleTableMetadata
 from realtabformer import REaLTabFormer
 
-from synthetic_data_generation.generator import Generator
+from SingleTableGeneration.synthetic_data_generation.generator import Generator
 
 
 
