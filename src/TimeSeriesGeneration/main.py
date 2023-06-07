@@ -1,6 +1,7 @@
 from sdv.datasets.local import load_csvs
 from data_processing import DataProcessor
 from ts_generator import TSGenerator
+from ts_similarity import TSSimilarityCheck
 import os
 
 if __name__ == "__main__":
@@ -45,3 +46,7 @@ if __name__ == "__main__":
     synthetic_df = generator.sample(n_samples=1)
 
     print(synthetic_df.head())
+
+    sim_checker = TSSimilarityCheck(data_processor.df_long, synthetic_df, data_processor.metadata)
+    # This will not look good in a figure when running this file, but an example output can be found in the notebook. 
+    sim_checker.plot_nearest_neighbours()

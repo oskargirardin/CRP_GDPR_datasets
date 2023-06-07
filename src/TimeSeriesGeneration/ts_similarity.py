@@ -138,6 +138,9 @@ class TSSimilarityCheck():
             axs[i].set_title(f"Nearest neighbour: {real_col} (DTW-distance: {nn_distance: .2f})")
             axs[i].legend()
         
+        
         # If the number of plots is odd, make last plot empty
         if n_plots % 2 == 1:
             axs[-1].axis("off")
+
+        plt.show()
