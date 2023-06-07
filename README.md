@@ -250,7 +250,7 @@ Computes a matrix of dynamic time warping distances between each real and synthe
 
 Get the mean DTW distance for all closest pairs
 
-**3. plot_nearest_neighbours(sequence_column = "variable", value_column = "value", time_column = "time", **fig_kw))**
+**3. plot_nearest_neighbours(sequence_column = "variable", value_column = "value", time_column = "time")**
 
     sim_checker.plot_nearest_neighbours()
 
@@ -263,6 +263,6 @@ Attributes:
 * time_column: column that identifies the time point
 
 
-**** Usage
+#### Usage
 
 An example usage can be found in the UserGuide and in the main.py file in the TimeSeriesGeneration folder. The TsRequirements.txt contains the packages that should be installed. 
