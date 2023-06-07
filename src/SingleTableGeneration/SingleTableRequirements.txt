@@ -1,0 +1,13 @@
+Faker
+ipython
+matplotlib
+numpy
+pandas
+realtabformer==0.1.1
+scikit_learn
+scipy
+sdmetrics==0.10.0
+sdv==1.1.0
+seaborn
+torch==1.13.1
+tqdm
