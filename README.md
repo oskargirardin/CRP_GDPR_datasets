@@ -179,7 +179,7 @@ Attributes:
       should be trained. If None, all columns will become an identifier in long format
 * verbose: if True, print the dataframe
 
-**2. get_metadata_long_df(self, identifier, time_column, datetime_format=None)** 
+**2. get_metadata_long_df(identifier, time_column, datetime_format=None)** 
 
     data_processor.get_metadata_long_df(identifier, time_column, datetime_format=None)
 
@@ -188,3 +188,81 @@ Attributes:
 * time_column: orders the observations for each sequence, should be a numeric or a datetime format
 * datetime_format: in what format is the date? For example '%Y-%m-%d %H:%M:%S'.
 
+
+#### TSGenerator
+
+A class that can generate synthetic time series using the PARSynthesizer method available in the Synthetic Data Vault. 
+
+    generator = TSGenerator(df, metadata, method='PAR', verbose=False, cuda=False)
+
+Attributes: 
+* df: the dataframe, which for the PARSynthesizer should be in long format, which can be achieved with the DataProcessor.
+* metadata: the metadata corresponding to the long dataframe
+* method: the method with which to generate time series
+* verbose: whether to print training progress
+* cuda: whether a GPU is available
+
+
+Methods: 
+
+**1. train(n_epochs = 100)**
+
+    generator.train()
+
+This function will train the generator on the data passed to the constructor. 
+
+Attributes: 
+* n_epochs: the number of epochs to train for
+
+**2. sample(n_samples = 10, sequence_length = None)**
+
+    generator.sample()
+
+This function will sample a given amount of sequences
+
+Attributes: 
+* n_samples: the number of sequences to generate
+* sequence_length: the length of each sequence
+
+#### TSSimilarityCheck
+
+A class that will check the similarity for the time series
+
+    sim_checker = TSSimilarityCheck(df_real, df_synth, metadata)
+    
+Attributes: 
+* df_real: the real time series (long format)
+* df_synthetic: the synthetic time series (long format)
+* metadata: the metadata for the real data
+
+Methods: 
+
+**1. compute_distance_matrix()**
+
+    sim_checker.compute_distance_matrix()
+    
+Computes a matrix of dynamic time warping distances between each real and synthetic time series. 
+
+
+**2. get_mean_nn_distances()**
+
+    sim_checker.get_mean_nn_distances()
+
+Get the mean DTW distance for all closest pairs
+
+**3. plot_nearest_neighbours(sequence_column = "variable", value_column = "value", time_column = "time", **fig_kw))**
+
+    sim_checker.plot_nearest_neighbours()
+
+Function that plots the nearest (synthetic) time series for every real time series.
+
+Attributes: 
+
+* sequence_column: column that identifies different sequences
+* value_column: column that contains the values of the time series
+* time_column: column that identifies the time point
+
+
+**** Usage
+
+An example usage can be found in the UserGuide and in the main.py file in the TimeSeriesGeneration folder. The TsRequirements.txt contains the packages that should be installed. 
