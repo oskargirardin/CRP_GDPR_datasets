@@ -54,7 +54,8 @@ class DataProcessor():
             # How should NaN values be treated? Interpolated or removed?
             if interpolate:
                 self.df = self.df.interpolate()
-            elif drop_na_cols:
+                
+            if drop_na_cols:
                 self.df = self.df.dropna(axis=1, how="all")
 
         self.metadata = metadata
