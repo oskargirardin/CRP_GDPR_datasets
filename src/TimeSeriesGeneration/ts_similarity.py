@@ -6,7 +6,7 @@ import math
 
 class TSSimilarityCheck():
 
-    def __init__(self,df_real, df_synth, metadata):
+    def __init__(self,df_real, df_synth, metadata, single = False):
         """
         :param df_real: the real time series (long format)
         :param df_synth: the synthetic time series generated with PAR (long format)
@@ -16,6 +16,7 @@ class TSSimilarityCheck():
         self.df_synth = df_synth
         self.metadata = metadata
         self.dist_matrix = None
+        self.single = single
 
     def compute_distance_matrix(self):
         """
@@ -91,8 +92,21 @@ class TSSimilarityCheck():
         return np.mean(nn_distances)
 
 
+    def plot_nearest_neighbours(self, sequence_column = "variable", value_column = "value", time_column = "time", color_real = "r", color_synth = "b", **fig_kw):
+        """
+        Function that plots the nearest (synthetic) time series for every real time series.
+        
+        :param sequence_column: column that identifies different sequences
+        :param value_column: column that contains the values of the time series
+        :param time_column: column that identifies the time point
+        """
+        if self.single:
+            self._plot_nearest_neighbour(sequence_column = sequence_column, value_column = value_column, time_column = time_column, color_real = color_real, color_synth = color_synth, **fig_kw)
+        else:
+            self._plot_nearest_neighbours(sequence_column = sequence_column, value_column = value_column, time_column = time_column, color_real = color_real, color_synth = color_synth, **fig_kw)
 
-    def plot_nearest_neighbours(self, sequence_column = "variable", value_column = "value", time_column = "time", **fig_kw):
+
+    def _plot_nearest_neighbours(self, sequence_column = "variable", value_column = "value", time_column = "time", color_real = "r", color_synth = "b", **fig_kw):
         """
         Function that plots the nearest (synthetic) time series for every real time series.
 
@@ -132,15 +146,62 @@ class TSSimilarityCheck():
             y_synth = synth_df_subset[value_column]
             x_synth = synth_df_subset[time_column]
 
-            axs[i].plot(x_real, y_real, label = f"Real ({real_col})")
-            axs[i].plot(x_synth, y_synth, label = f"Synthetic ({synth_name})")
+            axs[i].grid(False)
+            axs[i].plot(x_real, y_real, label = f"Real", color = color_real)
+            axs[i].plot(x_synth, y_synth, label = f"Synthetic {synth_name}", color = color_synth)
             axs[i].tick_params(axis='x', which='both', bottom=False,top=False,labelbottom=False)
-            axs[i].set_title(f"Nearest neighbour: {real_col} (DTW-distance: {nn_distance: .2f})")
+            axs[i].set_title(f"{real_col} (DTW-distance: {nn_distance: .2f})")
             axs[i].legend()
         
         
         # If the number of plots is odd, make last plot empty
         if n_plots % 2 == 1:
             axs[-1].axis("off")
+
+        plt.show()
+
+    
+    def _plot_nearest_neighbour(self, sequence_column = "variable", value_column = "value", time_column = "time", color_real = "r", color_synth = "b", **fig_kw):
+        """
+        Function that plots the nearest (synthetic) time series for a single real time series.
+
+        :param sequence_column: column that identifies different sequences
+        :param value_column: column that contains the values of the time series
+        :param time_column: column that identifies the time point
+        """
+        # Make sure that it's a single time series
+        assert len(self.df_real[sequence_column].unique()) == 1, "Make sure that the real dataframe has only one sequence"
+
+        # Get name of time series
+        real_name = self.df_real[sequence_column].unique()[0]
+
+        # Compute distance matrix
+        if self.dist_matrix is None:
+            self.compute_distance_matrix()
+
+        # Find the nearest neighbour's names
+        nn_name = self.dist_matrix.idxmin(axis=0).values[0]
+
+        # Init plotting
+        fig, ax = plt.subplots(nrows=1, ncols=1, **fig_kw) 
+
+        # Get DTW distance of pair
+        nn_distance = self.dist_matrix[real_name][nn_name]
+
+        # Subset real dataset and extract y, x for plotting
+        y_real = self.df_real[value_column]
+        x_real = self.df_real[time_column]
+
+        # Subset synthetic dataset and extract y, x for plotting
+        synth_df_subset = self.df_synth[self.df_synth[sequence_column] == nn_name]
+        y_synth = synth_df_subset[value_column]
+        x_synth = synth_df_subset[time_column]
+
+        ax.grid(False)
+        ax.plot(x_real, y_real, label = f"Real", color = color_real)
+        ax.plot(x_synth, y_synth, label = f"Synthetic ({nn_name})", color = color_synth)
+        ax.tick_params(axis='x', which='both', bottom=False,top=False,labelbottom=False)
+        ax.set_title(f"{real_name} (DTW-distance: {nn_distance: .2f})")
+        ax.legend()
 
         plt.show()
