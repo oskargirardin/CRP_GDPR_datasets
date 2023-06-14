@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed May 10 12:12:40 2023
-
-@author: lucreziacerto
-"""
-
 import pandas as pd
 import numpy as np
 from faker import Faker

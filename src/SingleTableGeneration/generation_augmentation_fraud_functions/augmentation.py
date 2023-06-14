@@ -1,10 +1,3 @@
-
-"""
-Created on Mon May 22 14:59 2023
-
-@author: marinaplt
-"""
-
 import pandas as pd
 import numpy as np
 from faker import Faker
