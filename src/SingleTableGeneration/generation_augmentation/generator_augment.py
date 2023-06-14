@@ -18,12 +18,12 @@ import re
 from sdv.metadata import SingleTableMetadata
 from realtabformer import REaLTabFormer
 
-from SingleTableGeneration.synthetic_data_generation.generator import Generator
+from generator import Generator
 
 
 
 
-def generator_augmentation(data, architecture, n_samples_nofraud, p_fraud, 
+def generator_augmentation(data, architecture, p_fraud, 
                            n_epochs_nofraud, n_epochs_fraud, n_boostrap, 
                            target_col, sensitive_columns = None):
     '''
@@ -34,8 +34,6 @@ def generator_augmentation(data, architecture, n_samples_nofraud, p_fraud,
         Dataframe to be synthesized and augmented.
     architecture : str
         The chosen architecture, one of ['CTGAN', 'GaussianCopula', 'RealTabFormer'].
-    n_samples_nofraud : int
-        the number of rows to generate of non fraud subsample.
     p_fraud: float
         size of the minority class (to augment) relative to the size of the majority class (percentage)
     n_epochs_nofraud : int
@@ -44,10 +42,11 @@ def generator_augmentation(data, architecture, n_samples_nofraud, p_fraud,
         the number of epochs used for training of the fraud subsample
     n_boostrap : int
         number of bootstraps for the RealTabFormer, default is 500.
+    target_col : string
+        name of the target column (assumin fraud = 1, no fraud = 0).
     sensitive_columns : dict
         a dict with sensitive columns and what  category they belong to.
-    target_col : string
-        name of the target column.
+
 
     Returns
     -------
@@ -65,15 +64,16 @@ def generator_augmentation(data, architecture, n_samples_nofraud, p_fraud,
             categorical_columns.append(col)
     
     #minority class subset
-    fraud_data = data[data[target_col] ==1]
+    fraud_data = data[data[target_col] == 1]
     #majority class subset
-    nofraud_data = data[data[target_col] ==0]
+    nofraud_data = data[data[target_col] == 0]
     
     #Computing the desired size of the minority class for augmentation
-    n_samples_fraud = round(n_samples_nofraud*(p_fraud/(1 - p_fraud)))
+    n_samples_no_fraud = len(nofraud_data)
+    n_samples_fraud = round(n_samples_no_fraud*(p_fraud/(1 - p_fraud)))
     
     nofraud_generator = Generator(num_epochs=n_epochs_nofraud,
-                                  n_samples=n_samples_nofraud,
+                                  n_samples=n_samples_no_fraud,
                                   num_bootstrap = n_boostrap ,
                                   architecture= architecture,
                                   data=nofraud_data,
